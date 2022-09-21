@@ -2,25 +2,28 @@ const express = require('express');
 const faker = require('faker');
 const router = express.Router();
 
+//get
 router.get('/', async (req, res) => {
-    res.json([
-        {
-          id: 123,
-          name: 'Producto 1',
-          price: 100,
-        },
-        {
-          id: 111,
-          name: 'Producto 2',
-          price: 200,
-        },
-        {
-          id: 222,
-          name: 'Producto 3',
-          price: 300,
-        },
-      ]);
+  var data = [];
+  for (var i = 0; i < 10; i++) {
+    data.push
+    ([
+      {id : i,
+      codigo : faker.random.number(),
+      nombre : faker.commerce.product(),
+      descripcion : faker.commerce.productDescription(),
+      marca : "Sabritas",
+      categoria : faker.commerce.department(),
+      subcategoria : faker.commerce.department(),
+      precio : faker.commerce.price(),
+      stock : faker.random.number(),
+      min_stock : faker.random.number(),
+      entry : faker.date.recent(),
+      proveedor : faker.company.companyName()}
+    ]);
+  }
 
+  res.json(data);
 })
 
 module.exports = router;
