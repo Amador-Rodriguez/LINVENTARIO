@@ -1,7 +1,62 @@
 const express = require('express');
-const faker = require('faker');
+//const faker = require('faker');
 const router = express.Router();
+const ProductService = require('../services/products.service');
+const service = new ProductService();
 
+router.get('/', async(req, res) =>{
+  const {size} = req.query;
+  const limit = size || 10;
+  const sales = service.find(limit);
+  res.json(sales);
+});
+
+router.get('/:id', async (req, res) => {
+  const {id} = req.params;
+  const sale = service.findOne(id);
+  res.json({
+      message: 'Aqui esta',
+      sale: sale,
+  });
+});
+
+router.post('/', async (req, res) => {
+  const body = req.body;
+  res.send({
+      message: 'creado',
+      data: body,
+  });
+});
+
+router.patch('/:id', async (req, res) => {
+  const {id} = req.params;
+  const body = req.body;
+  res.json({
+      message: 'actualizacion',
+      data:body,
+      id,
+  });
+});
+
+router.put('/:id', async(req,res) => {
+  const {id} = req.params;
+  const body = req.body;
+  res.json({
+      message: 'act',
+      data: body,
+      id,
+  });
+});
+
+router.put('/:id', async(req, res) => {
+  const {id} = req.params;
+  res.json({
+      message: 'eliminar',
+      id,
+  });
+});
+
+/* 
 //get
 router.get('/', async (req, res) => {
   var data = [];
@@ -25,5 +80,5 @@ router.get('/', async (req, res) => {
 
   res.json(data);
 })
-
+*/
 module.exports = router;

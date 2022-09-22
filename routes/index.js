@@ -1,5 +1,6 @@
 const inventoryRouter = require('./inventory.router');
 const productsRouter = require('./products.router');
+const salesRouter = require('./sales.router');
 const express = require('express');
 
 function routerApi(app) {
@@ -7,6 +8,7 @@ function routerApi(app) {
     app.use('/api/v1', router);
     router.use('/inventory', inventoryRouter);
     router.use('/products', productsRouter);
+    router.use('/sales', salesRouter);
 
   }
 
