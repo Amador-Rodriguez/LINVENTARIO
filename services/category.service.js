@@ -5,7 +5,7 @@ class CategoryService {
         this.generate();
     }
     generate(){
-        const limit = 10;
+        const limit = 5;
         for(let i = 0; i < limit; i++){
             this.cat.push({
                 id: i,

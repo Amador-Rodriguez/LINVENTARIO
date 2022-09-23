@@ -5,7 +5,7 @@ const service = new CategoryService();
 
 router.get('/', async(req, res) =>{
   const {size} = req.query;
-  const limit = size || 10;
+  const limit = size || 5;
   const cat = service.find(limit);
   res.json(cat);
 });
