@@ -7,6 +7,8 @@ app.use(express.json());
 
 
 routerApi(app);
+
+app.get('/', (req, res) => res.send('Hola mundo desde LINVENTARIO'));
 app.listen(port, () =>
 {
   // eslint-disable-next-line no-console

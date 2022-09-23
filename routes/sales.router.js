@@ -1,5 +1,5 @@
 const express = require('express');
-//const faker = require('faker');
+const faker = require('faker');
 const router = express.Router();
 const SaleService = require('../services/sales.service');
 const service = new SaleService();
