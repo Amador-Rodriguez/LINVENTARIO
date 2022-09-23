@@ -1,4 +1,7 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
+const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+
 class InvService {
   constructor() {
     this.inv = [];
@@ -16,10 +19,24 @@ class InvService {
     }
   }
   find(limit) {
-    return this.inv.slice(0, limit);
+    return new Promise((resolve, rejected) => {
+
+      var inv = this.inv.slice(0, limit);
+      if(inv.length > 0){
+        resolve(inv);
+      } else {
+        rejected('');
+      }
+    }, 5000);
+    //return this.inv.slice(0, limit);
   }
   findOne(id) {
-    return this.inv.find((item) => item.id == id);
+    const inv = this.inv.find((item) => item.id == id);
+
+    validateData(inv, NOTFOUND, 'No se encontro', (data)=> !data);
+
+    return inv;
+    //return this.inv.find((item) => item.id == id);
   }
 
   create(data) {
@@ -33,6 +50,9 @@ class InvService {
 
   update(id, changes) {
     const index = this.inv.findIndex((item) => item.id == id);
+
+    if(index == -1) throw boom.notFound('No encontrado');
+
     var currentInv = this.inv[index];
     this.inv[index] = {
       ...currentInv,
@@ -43,12 +63,21 @@ class InvService {
 
   replace(id, changes) {
     const index = this.inv.findIndex((item) => item.id == id);
+
+    if(index == -1) throw boom.notFound('No encontrado');
+
     this.inv[index] = changes;
     return this.inv[index];
   }
 
   delete(id) {
     const index = this.inv.findIndex((item) => item.id == id);
+
+    if (index == -1) {
+      if (index == -1) throw boom.notFound('No encontrado');
+      
+    }
+    
     this.inv.splice(index, 1);
     return {
       message: 'Eliminado',

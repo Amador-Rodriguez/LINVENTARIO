@@ -1,4 +1,7 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
+const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+
 class UserService {
     constructor(){
         this.users = [];
@@ -18,13 +21,30 @@ class UserService {
         }
     }
     find(limit){
-        return this.users.slice(0,limit);
+        return new Promise((resolve, rejected) => {
+
+            var users = this.users.slice(0, limit);
+            if(users.length > 0){
+              resolve(users);
+            } else {
+              rejected('');
+            }
+          }, 5000);
+        //return this.users.slice(0,limit);
     }
     findOne(id){
-        return this.users.find((item) => item.id == id);
+        const users = this.users.find((item) => item.id == id);
+
+    validateData(users, NOTFOUND, 'No se encontro', (data)=> !data);
+
+    return users;
+        //return this.users.find((item) => item.id == id);
     }
     findByName(name) {
-        return this.users.find((item) => item.nombre == name);
+        const users = this.users.find((item) => item.nombre == name);
+    validateData(users, NOTFOUND, 'No se encontro', (data)=> !data);
+    return users;
+        //return this.users.find((item) => item.nombre == name);
       }
 
     create(data){
@@ -38,6 +58,9 @@ class UserService {
 
     update(id, changes) {
         const index = this.users.findIndex((item) => item.id == id);
+
+        if(index == -1) throw boom.notFound('No encontrado');
+
         var currentUser = this.users[index];
         this.users[index] = {
             ...currentUser,
@@ -48,12 +71,21 @@ class UserService {
 
     replace(id, changes) {
         const index = this.users.findIndex((item) => item.id == id);
+
+        if(index == -1) throw boom.notFound('No encontrado');
+
         this.users[index] = changes;
         return this.users[index];
       }
 
     delete(id){
         const index = this.users.findIndex((item) => item.id == id);
+
+        if (index == -1) {
+            if (index == -1) throw boom.notFound('No encontrado');
+            
+          }
+          
         this.users.splice(index,1);
         return{
             message: 'Eliminado',

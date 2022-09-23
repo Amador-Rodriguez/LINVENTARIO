@@ -1,4 +1,7 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
+const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+
 class ProviderService {
     constructor(){
         this.pro = [];
@@ -19,13 +22,30 @@ class ProviderService {
         }
     }
     find(limit){
-        return this.pro.slice(0,limit);
+        return new Promise((resolve, rejected) => {
+
+            var pro = this.pro.slice(0, limit);
+            if(pro.length > 0){
+              resolve(pro);
+            } else {
+              rejected('');
+            }
+          }, 5000);
+        //return this.pro.slice(0,limit);
     }
     findOne(id){
-        return this.pro.find((item) => item.id === id);
+        const pro = this.pro.find((item) => item.id == id);
+
+    validateData(pro, NOTFOUND, 'No se encontro', (data)=> !data);
+
+    return pro;
+        //return this.pro.find((item) => item.id === id);
     }
     findByName(name) {
-        return this.pro.find((item) => item.nombre == name);
+        const pro = this.pro.find((item) => item.nombre == name);
+    validateData(pro, NOTFOUND, 'No se encontro', (data)=> !data);
+    return pro;
+        //return this.pro.find((item) => item.nombre == name);
       }
 
     create(data){
@@ -39,6 +59,9 @@ class ProviderService {
 
      update(id, changes) {
         const index = this.pro.findIndex((item) => item.id === id);
+
+        if(index == -1) throw boom.notFound('No encontrado');
+
         var currentPro = this.pro[index];
         this.pro[index] = {
             ...currentPro,
@@ -49,12 +72,21 @@ class ProviderService {
 
     replace(id, changes) {
         const index = this.pro.findIndex((item) => item.id == id);
+
+        if(index == -1) throw boom.notFound('No encontrado');
+
         this.pro[index] = changes;
         return this.pro[index];
       }
 
     delete(id){
         const index = this.pro.findIndex((item) => item.id == id);
+
+        if (index == -1) {
+            if (index == -1) throw boom.notFound('No encontrado');
+            
+          }
+          
         this.pro.splice(index,1);
         return{
             message: 'Eliminado',

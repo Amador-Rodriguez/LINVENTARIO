@@ -1,4 +1,7 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
+const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+
 class RecordService {
   constructor() {
     this.records = [];
@@ -17,13 +20,30 @@ class RecordService {
     }
   }
   find(limit) {
-    return this.records.slice(0, limit);
+    return new Promise((resolve, rejected) => {
+
+      var records = this.records.slice(0, limit);
+      if(records.length > 0){
+        resolve(records);
+      } else {
+        rejected('');
+      }
+    }, 5000);
+    //return this.records.slice(0, limit);
   }
   findOne(id) {
-    return this.records.find((item) => item.id == id);
+    const records = this.records.find((item) => item.id == id);
+
+    validateData(records, NOTFOUND, 'No se encontro', (data)=> !data);
+
+    return records;
+    //return this.records.find((item) => item.id == id);
   }
   findByName(usuario) {
-    return this.records.find((item) => item.usuario == usuario);
+    const records = this.records.find((item) => item.nombre == name);
+    validateData(records, NOTFOUND, 'No se encontro', (data)=> !data);
+    return records;
+    //return this.records.find((item) => item.usuario == usuario);
   }
 
 
@@ -39,6 +59,9 @@ class RecordService {
 
   update(id, changes) {
     const index = this.records.findIndex((item) => item.id == id);
+
+    if(index == -1) throw boom.notFound('No encontrado');
+
     var currentAction = this.records[index];
     this.records[index] = {
       ...currentAction,
@@ -49,12 +72,21 @@ class RecordService {
 
   replace(id, changes) {
     const index = this.records.findIndex((item) => item.id == id);
+
+    if(index == -1) throw boom.notFound('No encontrado');
+
     this.records[index] = changes;
     return this.records[index];
   }
 
   delete(id) {
     const index = this.records.findIndex((item) => item.id == id);
+
+    if (index == -1) {
+      if (index == -1) throw boom.notFound('No encontrado');
+      
+    }
+    
     this.records.splice(index, 1);
     return {
       message: 'Eliminado',

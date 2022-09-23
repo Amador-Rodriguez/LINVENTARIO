@@ -1,4 +1,7 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
+const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+
 class SaleService {
     constructor(){
         this.sales = [];
@@ -19,13 +22,30 @@ class SaleService {
         }
     }
     find(limit){
-        return this.sales.slice(0,limit);
+        return new Promise((resolve, rejected) => {
+
+            var sales = this.sales.slice(0, limit);
+            if(sales.length > 0){
+              resolve(sales);
+            } else {
+              rejected('');
+            }
+          }, 5000);
+        //return this.sales.slice(0,limit);
     }
     findOne(id){
-        return this.sales.find((item) => item.id == id);
+        const sales = this.sales.find((item) => item.id == id);
+
+    validateData(sales, NOTFOUND, 'No se encontro', (data)=> !data);
+
+    return sales;
+        //return this.sales.find((item) => item.id == id);
     }
     findByName(name) {
-        return this.sales.find((item) => item.producto == name);
+        const sales = this.sales.find((item) => item.producto == name);
+    validateData(sales, NOTFOUND, 'No se encontro', (data)=> !data);
+    return sales;
+        //return this.sales.find((item) => item.producto == name);
       }
 
     create(data){
@@ -39,6 +59,9 @@ class SaleService {
 
     update(id, changes) {
         const index = this.sales.findIndex((item) => item.id == id);
+
+        if(index == -1) throw boom.notFound('No encontrado');
+        
         var currentSale = this.sales[index];
         this.sales[index] = {
             ...currentSale,
@@ -49,12 +72,21 @@ class SaleService {
 
     replace(id, changes) {
         const index = this.sales.findIndex((item) => item.id == id);
+
+        if(index == -1) throw boom.notFound('No encontrado');
+
         this.sales[index] = changes;
         return this.sales[index];
       }
 
     async delete(id){
         const index = this.sales.findIndex((item) => item.id == id);
+
+        if (index == -1) {
+            if (index == -1) throw boom.notFound('No encontrado');
+            
+          }
+
         this.sales.splice(index,1);
         return{
             message: 'Eliminado',

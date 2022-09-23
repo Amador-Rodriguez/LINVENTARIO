@@ -1,4 +1,7 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
+const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+
 class PersonalService {
     constructor(){
         this.per = [];
@@ -19,13 +22,31 @@ class PersonalService {
         }
     }
     find(limit){
-        return this.per.slice(0,limit);
+        return new Promise((resolve, rejected) => {
+
+            var per = this.per.slice(0, limit);
+            if(per.length > 0){
+              resolve(per);
+            } else {
+              rejected('');
+            }
+          }, 5000);
+
+        //return this.per.slice(0,limit);
     }
     findOne(id){
-        return this.per.find((item) => item.id === id);
+        const per = this.per.find((item) => item.id == id);
+
+        validateData(per, NOTFOUND, 'No se encontro', (data)=> !data);
+
+        return per;
+        //return this.per.find((item) => item.id === id);
     }
     findByName(name) {
-        return this.per.find((item) => item.nombre == name);
+        const per = this.per.find((item) => item.nombre == name);
+        validateData(per, NOTFOUND, 'No se encontro', (data)=> !data);
+        return per;
+        //return this.per.find((item) => item.nombre == name);
       }
 
     create(data){
@@ -39,6 +60,9 @@ class PersonalService {
 
     update(id, changes) {
         const index = this.per.findIndex((item) => item.id === id);
+
+        if(index == -1) throw boom.notFound('No encontrado');
+
         var currentPer = this.per[index];
         this.per[index] = {
             ...currentPer,
@@ -49,12 +73,21 @@ class PersonalService {
 
     replace(id, changes) {
         const index = this.per.findIndex((item) => item.id == id);
+
+        if(index == -1) throw boom.notFound('No encontrado');
+
         this.per[index] = changes;
         return this.per[index];
       }
 
     delete(id){
         const index = this.per.findIndex((item) => item.id == id);
+
+        if (index == -1) {
+            if (index == -1) throw boom.notFound('No encontrado');
+            
+          }
+          
         this.per.splice(index,1);
         return{
             message: 'Eliminado',
