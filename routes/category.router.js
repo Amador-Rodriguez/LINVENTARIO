@@ -5,17 +5,17 @@ const service = new CategoryService();
 
 router.get('/', async(req, res) =>{
   const {size} = req.query;
-  const limit = size || 5;
-  const inv = service.find(limit);
-  res.json(inv);
+  const limit = size || 10;
+  const cat = service.find(limit);
+  res.json(cat);
 });
 
 router.get('/:id', async (req, res) => {
   const {id} = req.params;
-  const inv = service.findOne(id);
+  const cat = service.findOne(id);
   res.json({
       message: 'Aqui esta category por id',
-      inv: inv,
+      cat: cat,
   });
 });
 
