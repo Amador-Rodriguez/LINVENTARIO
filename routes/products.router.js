@@ -1,5 +1,5 @@
 const express = require('express');
-//const faker = require('faker');
+const faker = require('faker');
 const router = express.Router();
 const ProductService = require('../services/products.service');
 const service = new ProductService();
@@ -8,6 +8,8 @@ router.get('/', async(req, res) =>{
   const {size} = req.query;
   const limit = size || 10;
   const sales = service.find(limit);
+
+
   res.json(sales);
 });
 
@@ -56,7 +58,7 @@ router.put('/:id', async(req, res) => {
   });
 });
 
-/* 
+/*
 //get
 router.get('/', async (req, res) => {
   var data = [];
