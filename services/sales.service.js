@@ -22,8 +22,11 @@ class SaleService {
         return this.sales.slice(0,limit);
     }
     findOne(id){
-        return this.sales.find((item) => item.id === id);
+        return this.sales.find((item) => item.id == id);
     }
+    findByName(name) {
+        return this.sales.find((item) => item.producto == name);
+      }
 
     create(data){
         const newSale = {
@@ -34,8 +37,8 @@ class SaleService {
         return newSale;
     }
 
-    async update(id, changes) {
-        const index = this.sales.findIndex((item) => item.id === id);
+    update(id, changes) {
+        const index = this.sales.findIndex((item) => item.id == id);
         var currentSale = this.sales[index];
         this.sales[index] = {
             ...currentSale,
@@ -43,6 +46,12 @@ class SaleService {
         };
         return this.sales[index];
     }
+
+    replace(id, changes) {
+        const index = this.sales.findIndex((item) => item.id == id);
+        this.sales[index] = changes;
+        return this.sales[index];
+      }
 
     async delete(id){
         const index = this.sales.findIndex((item) => item.id == id);

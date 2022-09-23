@@ -24,6 +24,9 @@ class PersonalService {
     findOne(id){
         return this.per.find((item) => item.id === id);
     }
+    findByName(name) {
+        return this.per.find((item) => item.nombre == name);
+      }
 
     create(data){
         const newPer = {
@@ -34,7 +37,7 @@ class PersonalService {
         return newPer;
     }
 
-    async update(id, changes) {
+    update(id, changes) {
         const index = this.per.findIndex((item) => item.id === id);
         var currentPer = this.per[index];
         this.per[index] = {
@@ -44,7 +47,13 @@ class PersonalService {
         return this.per[index];
     }
 
-    async delete(id){
+    replace(id, changes) {
+        const index = this.per.findIndex((item) => item.id == id);
+        this.per[index] = changes;
+        return this.per[index];
+      }
+
+    delete(id){
         const index = this.per.findIndex((item) => item.id == id);
         this.per.splice(index,1);
         return{

@@ -24,6 +24,9 @@ class ProviderService {
     findOne(id){
         return this.pro.find((item) => item.id === id);
     }
+    findByName(name) {
+        return this.pro.find((item) => item.nombre == name);
+      }
 
     create(data){
         const newPro = {
@@ -34,7 +37,7 @@ class ProviderService {
         return newPro;
     }
 
-    async update(id, changes) {
+     update(id, changes) {
         const index = this.pro.findIndex((item) => item.id === id);
         var currentPro = this.pro[index];
         this.pro[index] = {
@@ -44,7 +47,13 @@ class ProviderService {
         return this.pro[index];
     }
 
-    async delete(id){
+    replace(id, changes) {
+        const index = this.pro.findIndex((item) => item.id == id);
+        this.pro[index] = changes;
+        return this.pro[index];
+      }
+
+    delete(id){
         const index = this.pro.findIndex((item) => item.id == id);
         this.pro.splice(index,1);
         return{

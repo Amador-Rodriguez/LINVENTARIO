@@ -19,36 +19,52 @@ router.get('/:id', async (req, res) => {
   });
 });
 
+router.get('/nombre/:nombre', async (req, res) => {
+  const {nombre} = req.params;
+  const cat = service.findByName(nombre);
+  res.json({
+      message: 'Aqui esta',
+      cat: cat,
+  });
+});
+
 router.post('/', async (req, res) => {
   const body = req.body;
+  const newCategory = service.create(body);
   res.json({
+      'succes' : true,
       message: 'creado category',
-      data: body,
+      data: newCategory,
   });
 });
 
 router.patch('/:id', async (req, res) => {
   const {id} = req.params;
   const body = req.body;
+  const result = service.update(id,body);
   res.json({
       message: 'actualizacion category',
       data:body,
       id,
+      result
   });
 });
 
 router.put('/:id', async(req,res) => {
   const {id} = req.params;
   const body = req.body;
+  const result = service.replace(id,body);
   res.json({
       message: 'act category',
       data: body,
       id,
+      result
   });
 });
 
 router.put('/:id', async(req, res) => {
   const {id} = req.params;
+  service.delete(id);
   res.json({
       message: 'eliminar category',
       id,

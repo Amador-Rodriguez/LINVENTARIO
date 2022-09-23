@@ -20,6 +20,10 @@ class CategoryService {
         return this.cat.find((item) => item.id === id);
     }
 
+    findByName(name) {
+        return this.cat.find((item) => item.nombre == name);
+      }
+
     create(data){
         const newCat = {
             id: faker.random.uuid(),
@@ -29,8 +33,8 @@ class CategoryService {
         return newCat;
     }
 
-    async update(id, changes) {
-        const index = this.cat.findIndex((item) => item.id === id);
+    update(id, changes) {
+        const index = this.cat.findIndex((item) => item.id == id);
         var currentCat = this.cat[index];
         this.cat[index] = {
             ...currentCat,
@@ -39,7 +43,13 @@ class CategoryService {
         return this.cat[index];
     }
 
-    async delete(id){
+    replace(id, changes) {
+        const index = this.cat.findIndex((item) => item.id == id);
+        this.cat[index] = changes;
+        return this.cat[index];
+      }
+
+     delete(id){
         const index = this.cat.findIndex((item) => item.id == id);
         this.cat.splice(index,1);
         return{

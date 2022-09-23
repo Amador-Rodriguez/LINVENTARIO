@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const SaleService = require('../services/sales.service');
-const service = new SaleService();
+const UserService = require('../services/users.service');
+const service = new UserService();
 
 router.get('/', async(req, res) =>{
     const {size} = req.query;
@@ -19,23 +19,22 @@ router.get('/:id', async (req, res) => {
     });
 });
 
-router.get('/producto/:producto', async (req, res) => {
-    const {producto} = req.params;
-    const vent = service.findByName(producto);
+router.get('/nombre/:nombre', async (req, res) => {
+    const {nombre} = req.params;
+    const us = service.findByName(nombre);
     res.json({
         message: 'Aqui esta',
-        vent: vent,
+        us: us,
     });
   });
-  
 
 router.post('/', async (req, res) => {
     const body = req.body;
-    const newSale = service.create(body);
+    const newUser = service.create(body);
     res.json({
         'succes' : true,
         message: 'creado',
-        data: newSale,
+        data: newUser,
     });
 });
 
