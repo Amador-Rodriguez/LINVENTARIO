@@ -21,7 +21,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const body = req.body;
-  res.send({
+  res.json({
       message: 'creado category',
       data: body,
   });
