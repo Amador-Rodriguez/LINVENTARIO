@@ -5,7 +5,7 @@ const service = new ProductService();
 
 router.get('/', async(req, res) =>{
   const {size} = req.query;
-  const limit = size || 10;
+  const limit = size || 20;
   const inv = await service.find(limit);
   res.json(inv);
 });
@@ -41,7 +41,7 @@ router.get('/:id', async (req, res, next) => {
   }catch (error) {
     next(error);
   }
-  
+
 });
 
 
@@ -126,11 +126,19 @@ router.put('/:id', async(req,res) => {
 
 router.delete('/:id', async(req, res) => {
   const {id} = req.params;
-  service.delete(id);
-  res.json({
-      message: 'eliminar',
-      id,
-  });
+  try{
+    service.delete(id);
+    res.json({
+        message: 'eliminar',
+        id,
+    });
+  }
+  catch(error){
+    res.status(404).json({
+      message: error.message
+    });
+  }
+
 });
 
 module.exports = router;

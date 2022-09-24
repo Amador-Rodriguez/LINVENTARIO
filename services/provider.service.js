@@ -58,7 +58,7 @@ class ProviderService {
     }
 
      update(id, changes) {
-        const index = this.pro.findIndex((item) => item.id === id);
+        const index = this.pro.findIndex((item) => item.id == id);
 
         if(index == -1) throw boom.notFound('No encontrado');
 
@@ -84,9 +84,9 @@ class ProviderService {
 
         if (index == -1) {
             if (index == -1) throw boom.notFound('No encontrado');
-            
+
           }
-          
+
         this.pro.splice(index,1);
         return{
             message: 'Eliminado',

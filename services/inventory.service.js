@@ -75,9 +75,9 @@ class InvService {
 
     if (index == -1) {
       if (index == -1) throw boom.notFound('No encontrado');
-      
+
     }
-    
+
     this.inv.splice(index, 1);
     return {
       message: 'Eliminado',

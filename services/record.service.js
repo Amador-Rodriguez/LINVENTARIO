@@ -40,13 +40,11 @@ class RecordService {
     //return this.records.find((item) => item.id == id);
   }
   findByName(usuario) {
-    const records = this.records.find((item) => item.nombre == name);
+    const records = this.records.find((item) => item.nombre == usuario);
     validateData(records, NOTFOUND, 'No se encontro', (data)=> !data);
     return records;
     //return this.records.find((item) => item.usuario == usuario);
   }
-
-
 
   create(data) {
     const newAction = {
@@ -84,9 +82,9 @@ class RecordService {
 
     if (index == -1) {
       if (index == -1) throw boom.notFound('No encontrado');
-      
+
     }
-    
+
     this.records.splice(index, 1);
     return {
       message: 'Eliminado',

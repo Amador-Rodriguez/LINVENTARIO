@@ -59,7 +59,7 @@ class PersonalService {
     }
 
     update(id, changes) {
-        const index = this.per.findIndex((item) => item.id === id);
+        const index = this.per.findIndex((item) => item.id == id);
 
         if(index == -1) throw boom.notFound('No encontrado');
 
@@ -85,9 +85,9 @@ class PersonalService {
 
         if (index == -1) {
             if (index == -1) throw boom.notFound('No encontrado');
-            
+
           }
-          
+
         this.per.splice(index,1);
         return{
             message: 'Eliminado',

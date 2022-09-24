@@ -50,22 +50,6 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.put('/:id', async (req, res, next) => {
-  try{
-  const {id} = req.params;
-  const body = req.body;
-  const result = await service.update(id,body);
-  res.json({
-      message: 'actualizacion category',
-      data:body,
-      id,
-      result
-  });
-  }catch(error){
-    next(error);
-  }
-});
-
 router.patch('/:id', async (req, res) => {
   try{
   const {id} = req.params;
@@ -103,12 +87,19 @@ router.put('/:id', async(req,res) => {
 });
 
 router.delete('/:id', async(req, res) => {
-  const {id} = req.params;
+  try {
+    const {id} = req.params;
   service.delete(id);
   res.json({
       message: 'eliminar category',
       id,
   });
+  } catch (error) {
+    res.status(404).json({
+      message: error.message
+    });
+  }
+
 });
 
 module.exports = router;

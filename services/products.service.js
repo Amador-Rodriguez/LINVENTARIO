@@ -90,7 +90,7 @@ class ProductService {
 
     if (index == -1) {
       if (index == -1) throw boom.notFound('No encontrado');
-      
+
     }
 
     this.products.splice(index, 1);
