@@ -100,16 +100,20 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 /* */
-router.patch('/:id', async (req, res) => { //este lo vamos a poner como un put ^
+router.patch(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  validatorHandler(updateProductDto, 'body'),
+  async (req, res) => { //este lo vamos a poner como un put ^
   try{
   const {id} = req.params;
   const body = req.body;
   const result = await service.update(id,body);
   res.json({
       message: 'actualizacion',
-      data:body,
+      data:result,
       id,
-      result
+
   });
   }catch(error) {
     res.status(404).json({
