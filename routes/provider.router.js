@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const ProviderService = require('../services/provider.service');
+const validatorHandler = require('./../middlewares/validator.handler');
 const service = new ProviderService();
+const {
+  createProviderDto,
+  updateProviderDto,
+  getProviderId,
+} = require('../dtos/provider.dto');
 
 router.get('/', async (req, res) => {
   const {
@@ -12,7 +18,10 @@ router.get('/', async (req, res) => {
   res.json(pro);
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get(
+  '/:id',
+  validatorHandler(getProviderId, 'params'),
+  async (req, res, next) => {
   try {
     const {
       id
@@ -44,7 +53,10 @@ router.get('/nombre/:nombre', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post(
+  '/',
+  validatorHandler(createProviderDto, 'body'),
+  async (req, res, next) => {
   const body = req.body;
   try {
     const newProvider = await service.create(body);
@@ -58,7 +70,11 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch(
+  '/:id',
+  validatorHandler(getProviderId, 'params'),
+  validatorHandler(updateProviderDto, 'body'),
+  async (req, res) => {
   try {
     const {
       id
@@ -67,9 +83,9 @@ router.patch('/:id', async (req, res) => {
     const result = await service.update(id, body);
     res.json({
       message: 'actualizacion provider',
-      data: body,
+      data: result,
       id,
-      result
+
     });
   } catch (error) {
     res.status(404).json({
@@ -78,7 +94,11 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put(
+  '/:id',
+  validatorHandler(getProviderId, 'params'),
+  validatorHandler(updateProviderDto, 'body'),
+  async (req, res) => {
   try {
     const {
       id
@@ -87,9 +107,9 @@ router.put('/:id', async (req, res) => {
     const result = await service.replace(id, body);
     res.json({
       message: 'act provider',
-      data: body,
+      data: result,
       id,
-      result
+
     });
   } catch (error) {
     res.status(404).json({
@@ -98,7 +118,10 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete(
+  '/:id',
+  validatorHandler(getProviderId, 'params'),
+  async (req, res) => {
   try {
     const {
       id

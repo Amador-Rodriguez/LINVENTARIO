@@ -12,12 +12,11 @@ class ProviderService {
         for(let i = 0; i < limit; i++){
             this.pro.push({
                 id: i,
-                nombre : faker.commerce.productName(),
-                apellidos : faker.commerce.productName(),
+                contacto : faker.commerce.productName(),
+                empresa : faker.commerce.productName(),
                 correo : faker.commerce.product(),
-                telefono : faker.datatype.number(),
-                extension : faker.random.number(),
-                area : faker.commerce.department(),
+                direccion : faker.commerce.productName(),
+                telefono : faker.random.number(),
             });
         }
     }

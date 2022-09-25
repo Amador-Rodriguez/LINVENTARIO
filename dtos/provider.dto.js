@@ -1,52 +1,34 @@
 const Joi = require('joi');
 
 const id = Joi.string().alphanum();
-const codigo = Joi.number().integer().min(10);
-const nombre = Joi.string().min(3).max(50);
-const descripcion = Joi.string().min(3).max(50);
-const marca = Joi.string().min(3).max(50);
-const categoria = Joi.string().min(3).max(50);
-const subcategoria = Joi.string().min(3).max(50);
-const precio = Joi.number().integer().min(10);
-const stock = Joi.number().integer().min(10);
-const min_stock = Joi.number().integer().min(10);
-const entry = Joi.number().integer().min(10); //buscar para fecha
-const proveedor = Joi.string().min(3).max(50);
+const contacto =  Joi.string().min(3).max(50);
+const empresa = Joi.string().min(3).max(50);
+const correo = Joi.string().min(3).max(50);
+const direccion = Joi.number().integer().min(10).max(10);
+const telefono = Joi.number().integer().min(2).max(2);
 
-const createProductDto = Joi.object({
-    nombre: nombre.required(),
-    codigo: codigo.required(),
-    descripcion: descripcion.required(),
-    marca: marca.required(),
-    categoria: categoria.required(),
-    subcategoria: subcategoria.required(),
-    precio: precio.required(),
-    stock: stock.required(),
-    min_stock: min_stock.required(),
-    entry: entry.required(),
-    proveedor: proveedor.required(),
+const createProviderDto = Joi.object({
+    contacto: contacto.required(),
+    empresa: empresa.required(),
+    correo: correo.required(),
+    direccion: direccion.required(),
+    telefono: telefono.required(),
 });
 
-const updateProductDto = Joi.object({
-    nombre: nombre,
-    codigo: codigo,
-    descripcion: descripcion,
-    marca: marca,
-    categoria: categoria,
-    subcategoria: subcategoria,
-    precio: precio,
-    stock: stock,
-    min_stock: min_stock,
-    entry: entry,
-    proveedor: proveedor,
+const updateProviderDto = Joi.object({
+  contacto: contacto,
+  empresa: empresa,
+  correo: correo,
+  direccion: direccion,
+  telefono: telefono,
 });
 
-const getProductId = Joi.object({
+const getProviderId = Joi.object({
   id: id.required(),
 });
 
 module.exports = {
-  createProductDto,
-  updateProductDto,
-  getProductId,
+  createProviderDto,
+  updateProviderDto,
+  getProviderId,
 };
