@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const InvService = require('../services/inventory.service');
+const validatorHandler = require('./../middlewares/validator.handler');
 const service = new InvService();
+const {
+  createProductDto,
+  updateProductDto,
+  getProductId,
+} = require('../dtos/inventory.dto');
 
 router.get('/', async (req, res) => {
   const {
@@ -12,7 +18,10 @@ router.get('/', async (req, res) => {
   res.json(inv);
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  async (req, res, next) => {
   try {
     const {
       id
@@ -28,32 +37,37 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post(
+  '/',
+  validatorHandler(createProductDto, 'body'),
+  async (req, res, next) => {
   const body = req.body;
   try {
-    const newProduct = await service.create(body);
+    const inv = await service.create(body);
     res.json({
       'succes': true,
       message: 'creado',
-      data: newProduct
+      data: inv
     });
   } catch (error) {
     next(error);
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  validatorHandler(updateProductDto, 'body'),
+   async (req, res) => {
   try {
-    const {
-      id
-    } = req.params;
+    const {id} = req.params;
     const body = req.body;
     const result = await service.update(id, body);
     res.json({
       message: 'actualizacion',
-      data: body,
+      data: result,
       id,
-      result
+
     });
   } catch (error) {
     res.status(404).json({
@@ -62,18 +76,20 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  validatorHandler(updateProductDto, 'body'),
+  async (req, res) => {
   try {
-    const {
-      id
-    } = req.params;
+    const {id} = req.params;
     const body = req.body;
     const result = await service.replace(id, body);
     res.json({
       message: 'actualizacion completa',
-      data: body,
+      data: result,
       id,
-      result
+
     });
   } catch (error) {
     res.status(404).json({
@@ -82,11 +98,11 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
-  try {
-    const {
-      id
-    } = req.params;
+router.delete(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  async (req, res) => {
+  try {const {id} = req.params;
     service.delete(id);
     res.json({
       message: 'eliminar',
