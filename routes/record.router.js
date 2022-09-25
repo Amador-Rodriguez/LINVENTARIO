@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const ProductService = require('../services/record.service');
-const service = new ProductService();
+const RecordService = require('../services/record.service');
+const validatorHandler = require('./../middlewares/validator.handler');
+const service = new RecordService();
+const {
+  createRecordDto,
+  updateRecordDto,
+  getRecordId,
+} = require('../dtos/record.dto');
 
 router.get('/', async (req, res) => {
   const {
@@ -12,7 +18,10 @@ router.get('/', async (req, res) => {
   res.json(rec);
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get(
+  '/:id',
+  validatorHandler(getRecordId, 'params'),
+  async (req, res, next) => {
   try {
     const {
       id
@@ -42,7 +51,10 @@ router.get('/usuario/:usuario', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post(
+  '/',
+  validatorHandler(createRecordDto, 'body'),
+  async (req, res, next) => {
   const body = req.body;
   try {
     const newAction = await service.create(body);
@@ -57,7 +69,11 @@ router.post('/', async (req, res, next) => {
 });
 
 
-router.patch('/:id', async (req, res) => {
+router.patch(
+  '/:id',
+  validatorHandler(getRecordId, 'params'),
+  validatorHandler(updateRecordDto, 'body'),
+  async (req, res) => {
   try {
     const {
       id
@@ -66,9 +82,9 @@ router.patch('/:id', async (req, res) => {
     const result = await service.update(id, body);
     res.json({
       message: 'actualizacion',
-      data: body,
+      data: result,
       id,
-      result
+
     });
   } catch (error) {
     res.status(404).json({
@@ -77,7 +93,11 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put(
+  '/:id',
+  validatorHandler(getRecordId, 'params'),
+  validatorHandler(updateRecordDto, 'body'),
+  async (req, res) => {
   try {
     const {
       id
@@ -86,9 +106,9 @@ router.put('/:id', async (req, res) => {
     const result = await service.replace(id, body);
     res.json({
       message: 'actualizacion completa',
-      data: body,
+      data: result,
       id,
-      result
+
     });
   } catch (error) {
     res.status(404).json({
@@ -97,7 +117,10 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete(
+  '/:id',
+  validatorHandler(getRecordId, 'params'),
+  async (req, res) => {
   try {
     const {
       id
