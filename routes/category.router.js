@@ -4,9 +4,9 @@ const CategoryService = require('../services/category.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const service = new CategoryService();
 const {
-  createProductDto,
-  updateProductDto,
-  getProductId,
+  createCategoryDto,
+  updateCategoryDto,
+  getCategoryId,
 } = require('../dtos/category.dto');
 
 router.get('/', async(req, res) =>{
@@ -18,7 +18,7 @@ router.get('/', async(req, res) =>{
 
 router.get(
   '/:id',
-  validatorHandler(getProductId, 'params'),
+  validatorHandler(getCategoryId, 'params'),
   async (req, res, next) => {
   try{
   const {id} = req.params;
@@ -48,7 +48,7 @@ router.get('/nombre/:nombre', async (req, res, next) => {
 
 router.post(
   '/',
-  validatorHandler(createProductDto, 'body'),
+  validatorHandler(createCategoryDto, 'body'),
   async (req, res, next) => {
   const body = req.body;
   try{
@@ -65,8 +65,8 @@ router.post(
 
 router.patch(
   '/:id',
-  validatorHandler(getProductId, 'params'),
-  validatorHandler(updateProductDto, 'body'),
+  validatorHandler(getCategoryId, 'params'),
+  validatorHandler(updateCategoryDto, 'body'),
   async (req, res) => {
   try{
   const {id} = req.params;
@@ -86,8 +86,8 @@ router.patch(
 
 router.put(
   '/:id',
-  validatorHandler(getProductId, 'params'),
-  validatorHandler(updateProductDto, 'body'),
+  validatorHandler(getCategoryId, 'params'),
+  validatorHandler(updateCategoryDto, 'body'),
   async(req,res) => {
   try{
   const {id} = req.params;
@@ -108,7 +108,7 @@ router.put(
 
 router.delete(
   '/:id',
-  validatorHandler(getProductId, 'params'),
+  validatorHandler(getCategoryId, 'params'),
   async(req, res) => {
   const {id} = req.params;
   try{
