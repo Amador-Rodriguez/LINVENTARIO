@@ -8,10 +8,10 @@ class ProductService {
     this.generate();
   }
   generate() {
-    const limit = 10;
+    const limit = 15;
     for (let i = 0; i < limit; i++) {
       this.products.push({
-        id: i,
+        id: faker.datatype.uuid(),
         codigo: faker.random.number(),
         nombre: faker.commerce.product(),
         descripcion: faker.commerce.productDescription(),

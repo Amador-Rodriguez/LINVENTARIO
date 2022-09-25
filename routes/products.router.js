@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const ProductService = require('../services/products.service');
+const validatorHandler = require('./../middlewares/validator.handler');
 const service = new ProductService();
+const {
+  createProductDto,
+  updateProductDto,
+  getProductId,
+} = require('../dtos/products.dto');
 
 router.get('/', async(req, res) =>{
   const {size} = req.query;
@@ -29,7 +35,10 @@ router.get('/:id', async (req, res) => {
 });
 
  */
-router.get('/:id', async (req, res, next) => {
+router.get(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  async (req, res, next) => {
   try{
     const { id } = req.params;
     const product = await service.findOne(id);
@@ -58,7 +67,10 @@ router.get('/nombre/:nombre', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post(
+  '/',
+  validatorHandler(createProductDto, 'body'),
+  async (req, res, next) => {
   const body = req.body;
   try{
   const newProduct = await service.create(body);
@@ -106,16 +118,19 @@ router.patch('/:id', async (req, res) => { //este lo vamos a poner como un put ^
   }
 });
 
-router.put('/:id', async(req,res) => {
+router.put(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  validatorHandler(updateProductDto, 'body'),
+  async(req,res) => {
   try{
   const {id} = req.params;
   const body = req.body;
   const result = await service.replace(id,body);
   res.json({
       message: 'actualizacion completa',
-      data: body,
+      data: result,
       id,
-      result
   });
   }catch(error){
     res.status(404).json({
@@ -124,7 +139,10 @@ router.put('/:id', async(req,res) => {
   }
 });
 
-router.delete('/:id', async(req, res) => {
+router.delete(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  async(req, res) => {
   const {id} = req.params;
   try{
     service.delete(id);

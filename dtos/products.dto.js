@@ -1,6 +1,7 @@
 const Joi = require('joi');
 
 const id = Joi.string().alphanum();
+const codigo = Joi.number().integer().min(10);
 const nombre = Joi.string().min(3).max(50);
 const descripcion = Joi.string().min(3).max(50);
 const marca = Joi.string().min(3).max(50);
@@ -14,6 +15,7 @@ const proveedor = Joi.string().min(3).max(50);
 
 const createProductDto = Joi.object({
     nombre: nombre.required(),
+    codigo: codigo.required(),
     descripcion: descripcion.required(),
     marca: marca.required(),
     categoria: categoria.required(),
@@ -27,6 +29,7 @@ const createProductDto = Joi.object({
 
 const updateProductDto = Joi.object({
     nombre: nombre,
+    codigo: codigo,
     descripcion: descripcion,
     marca: marca,
     categoria: categoria,
