@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const UserService = require('../services/users.service');
+const validatorHandler = require('./../middlewares/validator.handler');
 const service = new UserService();
+const {
+  createUsersDto,
+  updateUsersDto,
+  getUsersId,
+} = require('../dtos/users.dto');
 
 router.get('/', async (req, res) => {
   const {
@@ -12,7 +18,10 @@ router.get('/', async (req, res) => {
   res.json(sales);
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get(
+  '/:id',
+  validatorHandler(getUsersId, 'params'),
+  async (req, res, next) => {
   try {
     const {
       id
@@ -42,7 +51,10 @@ router.get('/nombre/:nombre', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post(
+  '/',
+  validatorHandler(createUsersDto, 'body'),
+  async (req, res, next) => {
   const body = req.body;
   try {
     const newUser = await service.create(body);
@@ -56,7 +68,11 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch(
+  '/:id',
+  validatorHandler(getUsersId, 'params'),
+  validatorHandler(updateUsersDto, 'body'),
+  async (req, res) => {
   try {
     const {
       id
@@ -65,9 +81,9 @@ router.patch('/:id', async (req, res) => {
     const result = await service.update(id, body);
     res.json({
       message: 'actualizacion',
-      data: body,
+      data: result,
       id,
-      result
+
     });
   } catch (error) {
     res.status(404).json({
@@ -76,7 +92,11 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put(
+  '/:id',
+  validatorHandler(getUsersId, 'params'),
+  validatorHandler(updateUsersDto, 'body'),
+  async (req, res) => {
   try {
     const {
       id
@@ -85,9 +105,9 @@ router.put('/:id', async (req, res) => {
     const result = await service.replace(id, body);
     res.json({
       message: 'actualizacion completa',
-      data: body,
+      data: result,
       id,
-      result
+
     });
   } catch (error) {
     res.status(404).json({
@@ -96,7 +116,10 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete(
+  '/:id',
+  validatorHandler(getUsersId, 'params'),
+  async (req, res) => {
   try {
     const {
       id
