@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const WarehouseService = require('../services/warehouses.service');
+const validatorHandler = require('./../middlewares/validator.handler');
 const service = new WarehouseService();
+const {
+  createWarehousesDto,
+  updateWarehousesDto,
+  getWarehousesId,
+} = require('../dtos/warehouses.dto');
 
 router.get('/', async(req, res) =>{
   const {size} = req.query;
@@ -10,7 +16,10 @@ router.get('/', async(req, res) =>{
   res.json(inv);
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get(
+  '/:id',
+  validatorHandler(getWarehousesId, 'params'),
+  async (req, res, next) => {
   try{
     const { id } = req.params;
     const wh = await service.findOne(id);
@@ -39,7 +48,10 @@ router.get('/nombre/:nombre', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post(
+  '/',
+  validatorHandler(createWarehousesDto, 'body'),
+  async (req, res, next) => {
   const body = req.body;
   try{
   const newWarehouse = await service.create(body);
@@ -53,32 +65,40 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.put('/:id', async (req, res, next) => {
+router.put(
+  '/:id',
+  validatorHandler(getWarehousesId, 'params'),
+  validatorHandler(updateWarehousesDto, 'body'),
+  async (req, res, next) => {
   try{
   const {id} = req.params;
   const body = req.body;
   const result = await service.update(id,body);
   res.json({
       message: 'actualizacion',
-      data:body,
+      data:result,
       id,
-      result
+
   });
   }catch(error) {
     next(error);
   }
 });
 /* */
-router.patch('/:id', async (req, res) => { 
+router.patch(
+  '/:id',
+  validatorHandler(getWarehousesId, 'params'),
+  validatorHandler(updateWarehousesDto, 'body'),
+  async (req, res) => {
   try{
   const {id} = req.params;
   const body = req.body;
   const result = await service.update(id,body);
   res.json({
       message: 'actualizacion',
-      data:body,
+      data:result,
       id,
-      result
+
   });
   }catch(error) {
     res.status(404).json({
@@ -87,16 +107,20 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', async(req,res) => {
+router.put(
+  '/:id',
+  validatorHandler(getWarehousesId, 'params'),
+  validatorHandler(updateWarehousesDto, 'body'),
+  async(req,res) => {
   try{
   const {id} = req.params;
   const body = req.body;
   const result = await service.replace(id,body);
   res.json({
       message: 'actualizacion completa',
-      data: body,
+      data: result,
       id,
-      result
+
   });
   }catch(error){
     res.status(404).json({
@@ -105,7 +129,10 @@ router.put('/:id', async(req,res) => {
   }
 });
 
-router.delete('/:id', async(req, res) => {
+router.delete(
+  '/:id',
+  validatorHandler(getWarehousesId, 'params'),
+  async(req, res) => {
   const {id} = req.params;
   try{
     service.delete(id);
