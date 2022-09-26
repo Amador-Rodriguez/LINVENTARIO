@@ -3,14 +3,14 @@ const Joi = require('joi');
 const id = Joi.string().alphanum();
 const codigo = Joi.number().integer().min(10);
 const nombre = Joi.string().min(3).max(50);
-const descripcion = Joi.string().min(3).max(50);
+const descripcion = Joi.string().max(200);
 const marca = Joi.string().min(3).max(50);
 const categoria = Joi.string().min(3).max(50);
 const subcategoria = Joi.string().min(3).max(50);
 const precio = Joi.number().integer().min(10);
 const stock = Joi.number().integer().min(10);
 const min_stock = Joi.number().integer().min(10);
-const entry = Joi.number().integer().min(10); //buscar para fecha
+const entry = Joi.string().max(100); //buscar para fecha
 const proveedor = Joi.string().min(3).max(50);
 
 const createProductDto = Joi.object({

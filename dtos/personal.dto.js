@@ -4,8 +4,8 @@ const id = Joi.string().alphanum();
 const nombre =  Joi.string().min(3).max(50);
 const apellidos = Joi.string().min(3).max(50);
 const correo = Joi.string().min(3).max(50);
-const telefono = Joi.number().integer().min(10).max(10);
-const extension = Joi.number().integer().min(2).max(2);
+const telefono = Joi.string().min(10).max(10);
+const extension = Joi.number().integer().min(0).max(100);
 const area = Joi.string().min(3).max(50);
 
 const createPersonalDto = Joi.object({

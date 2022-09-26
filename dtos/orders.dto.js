@@ -5,8 +5,8 @@ const producto = Joi.string().min(3).max(50);
 const precio = Joi.string().min(3).max(50);
 const proveedor = Joi.string().min(3).max(50);
 const direccion = Joi.string().min(3).max(50);
-const fecha_pedido = Joi.number().integer().min(10)
-const aprox_entrega = Joi.number().integer().min(10)
+const fecha_pedido = Joi.string().min(10);
+const aprox_entrega = Joi.string().min(10);
 
 const createOrdersDto = Joi.object({
     producto: producto.required(),

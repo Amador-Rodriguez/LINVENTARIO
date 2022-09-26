@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const id = Joi.string().alphanum();
-const usuario = Joi.number().integer().min(10);
+const usuario = Joi.string().min(10);
 const tipo = Joi.string().min(3).max(50);
 const accion = Joi.string().min(3).max(50);
 const fecha = Joi.string().min(3).max(50);

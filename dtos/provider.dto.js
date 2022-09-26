@@ -4,8 +4,8 @@ const id = Joi.string().alphanum();
 const contacto =  Joi.string().min(3).max(50);
 const empresa = Joi.string().min(3).max(50);
 const correo = Joi.string().min(3).max(50);
-const direccion = Joi.number().integer().min(10).max(10);
-const telefono = Joi.number().integer().min(2).max(2);
+const direccion = Joi.string().min(10).max(200);
+const telefono = Joi.string().min(10).max(10);
 
 const createProviderDto = Joi.object({
     contacto: contacto.required(),
