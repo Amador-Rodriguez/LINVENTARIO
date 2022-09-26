@@ -4,13 +4,13 @@ const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class WarehouseService {
   constructor() {
-    this.wh = [];
+    this.whs = [];
     this.generate();
   }
   generate() {
     const limit = 10;
     for (let i = 0; i < limit; i++) {
-      this.wh.push({
+      this.whs.push({
         id: i,
         nombre: faker.company.companyName(),
         direccion: faker.address.streetAddress(),
@@ -31,22 +31,22 @@ class WarehouseService {
           rejected('');
         }
       }, 5000);
-    
+
   }
 
   findOne(id) {
-    const wh = this.whs.find((item) => item.id == id);
+    const whs = this.whs.find((item) => item.id == id);
 
-    validateData(wh, NOTFOUND, 'No se encontro', (data)=> !data);
+    validateData(whs, NOTFOUND, 'No se encontro', (data)=> !data);
 
-    return wh;
-    
+    return whs;
+
   }
   findByName(name) {
-    const wh = this.whs.find((item) => item.nombre == name);
-    validateData(wh, NOTFOUND, 'No se encontro', (data)=> !data);
-    return wh;
-    
+    const whs = this.whs.find((item) => item.nombre == name);
+    validateData(s, NOTFOUND, 'No se encontro', (data)=> !data);
+    return whs;
+
   }
 
   create(data) {
