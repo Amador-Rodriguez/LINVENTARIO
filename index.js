@@ -8,7 +8,7 @@ const {
 
 const app = express();
 const port = 3000;
-//app.use(express.json());
+//app.use(cors(options));
 app.use(
   express.json({
     extended: false, // permite codificar matrices y objetos enriquecidos en formato codificado en url
