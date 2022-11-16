@@ -7,8 +7,8 @@ const {
 } = require('./middlewares/error.handler');
 
 const app = express();
-const port = 3000;
-//app.use(cors(options));
+const port = 3090;
+//app.use(express.json());
 app.use(
   express.json({
     extended: false, // permite codificar matrices y objetos enriquecidos en formato codificado en url
