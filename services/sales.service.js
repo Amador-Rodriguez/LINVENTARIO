@@ -1,12 +1,70 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
+const Model = require('../models/sales.model');
 const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class SaleService {
-    constructor(){
-        this.sales = [];
-        this.generate();
-    }
+    constructor(){}
+
+    async createDB(data) {
+        const model = new Model(data);
+        model.save();
+        return data;
+      }
+    
+      async findDB(limit, filter) {
+        let salesDB = await Model.find(filter);
+        salesDB = limit
+          ? salesDB.filter((item, index) => item && index < limit)
+          : salesDB;
+        if (salesDB == undefined || salesDB == null)
+          throw boom.notFound('No se encontro ventas');
+        else if (salesDB.length <= 0)
+          throw boom.notFound('No se encontro ninguna venta');
+        return salesDB;
+      }
+    
+      async findOneDB(id) {
+        const sale = await Model.findOne({
+          _id: id,
+        });
+        if (sale == undefined || sale == null)
+          throw boom.notFound('No se encontro ventas');
+        else if (sale.length <= 0)
+          throw boom.notFound('No se encontro ninguna venta');
+        return sale;
+      }
+    
+      async updateDB(id, changes) {
+        let sale = await Model.findOne({
+          _id: id,
+        });
+        let saleOriginal = {
+          name: sale.name,
+          id: sale.id,
+        };
+        const { name } = changes;
+        sale.name = name;
+        sale.save();
+    
+        return {
+          original: saleOriginal,
+          actualizado: sale,
+        };
+      }
+    
+      async deleteDB(id) {
+        let sale = await Model.findOne({
+          _id: id,
+        });
+        const { deletedCount } = await Model.deleteOne({
+          _id: id,
+        });
+        if (deletedCount <= 0)
+          throw boom.notFound('La venta seleccionada no existe');
+        return sale;
+      }
+    /* 
     generate(){
         const limit = 5;
         for(let i = 0; i < limit; i++){
@@ -92,7 +150,7 @@ class SaleService {
             message: 'Eliminado',
             id,
         };
-    }
+    }*/
 }
 
 module.exports = SaleService;

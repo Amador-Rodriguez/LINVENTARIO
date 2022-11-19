@@ -1,13 +1,73 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
+const Model = require('../models/orders.model');
 const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class OrderService {
-  constructor() {
-    this.orders = [];
-    this.generate();
+  constructor() {}
+
+  
+  async createDB(data) {
+    const model = new Model(data);
+    model.save();
+    return data;
   }
+
+  async findDB(limit, filter) {
+    let ordersDB = await Model.find(filter);
+    ordersDB = limit
+      ? ordersDB.filter((item, index) => item && index < limit)
+      : ordersDB;
+    if (ordersDB == undefined || ordersDB == null)
+      throw boom.notFound('No se encontro orden');
+    else if (ordersDB.length <= 0)
+      throw boom.notFound('No se encontro ninguna orden');
+    return ordersDB;
+  }
+
+  async findOneDB(id) {
+    const order = await Model.findOne({
+      _id: id,
+    });
+    if (order == undefined || order == null)
+      throw boom.notFound('No se encontro orden');
+    else if (order.length <= 0)
+      throw boom.notFound('No se encontro ninguna orden');
+    return order;
+  }
+
+  async updateDB(id, changes) {
+    let order = await Model.findOne({
+      _id: id,
+    });
+    let orderOriginal = {
+      name: order.name,
+      id: order.id,
+    };
+    const { name } = changes;
+    order.name = name;
+    order.save();
+
+    return {
+      original: orderOriginal,
+      actualizado: order,
+    };
+  }
+
+  async deleteDB(id) {
+    let order = await Model.findOne({
+      _id: id,
+    });
+    const { deletedCount } = await Model.deleteOne({
+      _id: id,
+    });
+    if (deletedCount <= 0)
+      throw boom.notFound('La orden seleccionada no existe');
+    return order;
+  }
+   /* 
   generate() {
+   
     const limit = 10;
     for (let i = 0; i < limit; i++) {
       this.orders.push({
@@ -93,7 +153,9 @@ class OrderService {
       message: 'Eliminado',
       id,
     };
+
   }
+  */
 }
 
 module.exports = OrderService;

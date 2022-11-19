@@ -1,12 +1,70 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
 const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+const Model = require('../models/personal.model');
 
 class PersonalService {
-    constructor(){
-        this.per = [];
-        this.generate();
-    }
+    constructor(){}
+
+    async createDB(data) {
+        const model = new Model(data);
+        model.save();
+        return data;
+      }
+    
+      async findDB(limit, filter) {
+        let personalDB = await Model.find(filter);
+        personalDB = limit
+          ? personalDB.filter((item, index) => item && index < limit)
+          : personalDB;
+        if (personalDB == undefined || personalDB == null)
+          throw boom.notFound('No se encontro catalogo');
+        else if (personalDB.length <= 0)
+          throw boom.notFound('No se encontro ningún registro');
+        return personalDB;
+      }
+    
+      async findOneDB(id) {
+        const personal = await Model.findOne({
+          _id: id,
+        });
+        if (personal == undefined || personal == null)
+          throw boom.notFound('No se encontro personal');
+        else if (personal.length <= 0)
+          throw boom.notFound('No se encontro ningún registro');
+        return personal;
+      }
+    
+      async updateDB(id, changes) {
+        let personal = await Model.findOne({
+          _id: id,
+        });
+        let personalOriginal = {
+          name: personal.name,
+          id: personal.id,
+        };
+        const { name } = changes;
+        personal.name = name;
+        personal.save();
+    
+        return {
+          original: personalOriginal,
+          actualizado: personal,
+        };
+      }
+    
+      async deleteDB(id) {
+        let personal = await Model.findOne({
+          _id: id,
+        });
+        const { deletedCount } = await Model.deleteOne({
+          _id: id,
+        });
+        if (deletedCount <= 0)
+          throw boom.notFound('El registro seleccionado no existe');
+        return personal;
+      }
+    /* 
     generate(){
         const limit = 10;
         for(let i = 0; i < limit; i++){
@@ -94,6 +152,7 @@ class PersonalService {
             id,
         };
     }
+    */
 }
 
 module.exports = PersonalService;

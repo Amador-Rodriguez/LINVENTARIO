@@ -1,12 +1,70 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
+const Model = require('../models/warehouse.model');
 const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class WarehouseService {
-  constructor() {
-    this.whs = [];
-    this.generate();
+  constructor() {}
+
+  async createDB(data) {
+    const model = new Model(data);
+    model.save();
+    return data;
   }
+
+  async findDB(limit, filter) {
+    let warehousesDB = await Model.find(filter);
+    warehousesDB = limit
+      ? warehousesDB.filter((item, index) => item && index < limit)
+      : warehousesDB;
+    if (warehousesDB == undefined || warehousesDB == null)
+      throw boom.notFound('No se encontro sucursales');
+    else if (warehousesDB.length <= 0)
+      throw boom.notFound('No se encontro ninguna sucursal');
+    return warehousesDB;
+  }
+
+  async findOneDB(id) {
+    const warehouse = await Model.findOne({
+      _id: id,
+    });
+    if (warehouse == undefined || warehouse == null)
+      throw boom.notFound('No se encontro sucursales');
+    else if (warehouse.length <= 0)
+      throw boom.notFound('No se encontro ninguna sucursal');
+    return warehouse;
+  }
+
+  async updateDB(id, changes) {
+    let warehouse = await Model.findOne({
+      _id: id,
+    });
+    let warehouseOriginal = {
+      name: warehouse.name,
+      id: warehouse.id,
+    };
+    const { name } = changes;
+    warehouse.name = name;
+    warehouse.save();
+
+    return {
+      original: warehouseOriginal,
+      actualizado: warehouse,
+    };
+  }
+
+  async deleteDB(id) {
+    let warehouse = await Model.findOne({
+      _id: id,
+    });
+    const { deletedCount } = await Model.deleteOne({
+      _id: id,
+    });
+    if (deletedCount <= 0)
+      throw boom.notFound('La sucursal seleccionado no existe');
+    return warehouse;
+  }
+  /* 
   generate() {
     const limit = 10;
     for (let i = 0; i < limit; i++) {
@@ -93,7 +151,7 @@ class WarehouseService {
       message: 'Eliminado',
       id,
     };
-  }
+  }*/
 }
 
 module.exports = WarehouseService;

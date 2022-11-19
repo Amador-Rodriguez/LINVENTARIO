@@ -1,12 +1,70 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
-const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+const Model = require('../models/category.model');
+//const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class CategoryService {
-    constructor(){
-        this.cat = [];
-        this.generate();
-    }
+    constructor(){}
+
+    async createDB(data) {
+        const model = new Model(data);
+        model.save();
+        return data;
+      }
+    
+      async findDB(limit, filter) {
+        let categoriesDB = await Model.find(filter);
+        categoriesDB = limit
+          ? categoriesDB.filter((item, index) => item && index < limit)
+          : categoriesDB;
+        if (categoriesDB == undefined || categoriesDB == null)
+          throw boom.notFound('No se encontro catalogo');
+        else if (categoriesDB.length <= 0)
+          throw boom.notFound('No se encontro ningún registro');
+        return categoriesDB;
+      }
+    
+      async findOneDB(id) {
+        const category = await Model.findOne({
+          _id: id,
+        });
+        if (category == undefined || category == null)
+          throw boom.notFound('No se encontro catalogo');
+        else if (category.length <= 0)
+          throw boom.notFound('No se encontro ningún registro');
+        return category;
+      }
+    
+      async updateDB(id, changes) {
+        let category = await Model.findOne({
+          _id: id,
+        });
+        let categoryOriginal = {
+          name: category.name,
+          id: category.id,
+        };
+        const { name } = changes;
+        category.name = name;
+        category.save();
+    
+        return {
+          original: categoryOriginal,
+          actualizado: category,
+        };
+      }
+    
+      async deleteDB(id) {
+        let category = await Model.findOne({
+          _id: id,
+        });
+        const { deletedCount } = await Model.deleteOne({
+          _id: id,
+        });
+        if (deletedCount <= 0)
+          throw boom.notFound('El registro seleccionado no existe');
+        return category;
+      }
+    /* 
     generate(){
         const limit = 5;
         for(let i = 0; i < limit; i++){
@@ -16,6 +74,7 @@ class CategoryService {
             });
         }
     }
+
     find(limit){
         return new Promise((resolve, rejected) => {
 
@@ -86,6 +145,7 @@ class CategoryService {
             id,
         };
     }
+    */
 }
 
 module.exports = CategoryService;

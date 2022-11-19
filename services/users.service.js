@@ -1,12 +1,75 @@
 const faker = require('faker');
 const boom = require('@hapi/boom');
+const Model = require('../models/users.model');
+
+/* 
 const {
   validateData,
   NOTFOUND,
   CONFLICT
 } = require('./../utils');
+*/
 
 class UserService {
+  constructor() {}
+
+  async createDB(data){
+    const model = new Model(data);
+    model.set("password", undefined, {strict: false});
+    await model.save();
+    return model;
+  }
+
+  async findDB(data){
+    let {limit, filter} = data;
+    let UsersDB = await Model.find(filter);
+    UsersDB = limit
+    ? UsersDB.filter((item, index)=> item && index < limit)
+    : UsersDB;
+    return UsersDB;
+  }
+
+  async findOneDB(id){
+    const User = await Model.findOne ({_id: id,});
+
+    if (User == undefined || User == null)
+      throw boom.notFound('No se encontro');
+    else if (User.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
+    return User;
+
+  }
+
+  async updateDB(id, changes) {
+    let User = await Model.findOne({
+      _id: id,
+    });
+    let UserOriginal = User;
+    User = {
+      ...UserOriginal,
+      ...changes
+    }
+    User.save();
+
+    return {
+      original: UserOriginal,
+      actualizado: User,
+    };
+  }
+
+  async deleteDB(id) {
+    let User = await Model.findOne({
+      _id: id,
+    });
+    const { deletedCount } = await Model.deleteOne({
+      _id: id,
+    });
+    if (deletedCount <= 0)
+      throw boom.notFound('El registro seleccionado no existe');
+    return User;
+  }
+
+/* 
   constructor() {
     this.users = [];
     this.generate();
@@ -96,6 +159,8 @@ class UserService {
       id,
     };
   }
+
+*/
 }
 
 module.exports = UserService;

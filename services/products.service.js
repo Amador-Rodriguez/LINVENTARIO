@@ -1,12 +1,70 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
+const Model = require('../models/products.model');
 const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class ProductService {
-  constructor() {
-    this.products = [];
-    this.generate();
+  constructor() {}
+
+  async createDB(data) {
+    const model = new Model(data);
+    model.save();
+    return data;
   }
+
+  async findDB(limit, filter) {
+    let productsDB = await Model.find(filter);
+    productsDB = limit
+      ? productsDB.filter((item, index) => item && index < limit)
+      : productsDB;
+    if (productsDB == undefined || productsDB == null)
+      throw boom.notFound('No se encontro catalogo');
+    else if (productsDB.length <= 0)
+      throw boom.notFound('No se encontro ningún producto');
+    return productsDB;
+  }
+
+  async findOneDB(id) {
+    const product = await Model.findOne({
+      _id: id,
+    });
+    if (product == undefined || product == null)
+      throw boom.notFound('No se encontro catalogo');
+    else if (product.length <= 0)
+      throw boom.notFound('No se encontro ningún producto');
+    return product;
+  }
+
+  async updateDB(id, changes) {
+    let product = await Model.findOne({
+      _id: id,
+    });
+    let productOriginal = {
+      name: product.name,
+      id: product.id,
+    };
+    const { name } = changes;
+    product.name = name;
+    product.save();
+
+    return {
+      original: productOriginal,
+      actualizado: product,
+    };
+  }
+
+  async deleteDB(id) {
+    let product = await Model.findOne({
+      _id: id,
+    });
+    const { deletedCount } = await Model.deleteOne({
+      _id: id,
+    });
+    if (deletedCount <= 0)
+      throw boom.notFound('El producto seleccionado no existe');
+    return product;
+  }
+  /* 
   generate() {
     const limit = 15;
     for (let i = 0; i < limit; i++) {
@@ -98,7 +156,7 @@ class ProductService {
       message: 'Eliminado',
       id,
     };
-  }
+  }*/
 }
 
 module.exports = ProductService;

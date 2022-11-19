@@ -1,4 +1,7 @@
 const express = require('express');
+const db = require('./db');
+require('dotenv').config();
+const cors = require('cors');
 const routerApi = require('./routes/');
 const {
   logErrors,
@@ -6,13 +9,18 @@ const {
   boomErrorHandler,
 } = require('./middlewares/error.handler');
 
+const { DBURL } = require('./const.json');
+//HACEMOS LA CONEXIÓN
+db(DBURL);
+
 const app = express();
 const port = 3000;
 //app.use(express.json());
+app.use(cors());
 app.use(
-  express.json({
-    extended: false, // permite codificar matrices y objetos enriquecidos en formato codificado en url
-  })
+  express.json(
+    { extended: false } // permite codificar matrices y objetos enriquecidos en formato codificado en url
+  )
 );
 
 

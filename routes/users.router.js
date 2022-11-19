@@ -1,8 +1,64 @@
 const express = require('express');
-const router = express.Router();
+const boom = require('@hapi/boom');
 const UserService = require('../services/users.service');
-const validatorHandler = require('./../middlewares/validator.handler');
 const service = new UserService();
+const validatorHandler = require('./../middlewares/validator.handler');
+const { encrypt, compare } = require('../utils/password.handler');
+const { signToken } = require('../utils/jwt.handler');
+const { loginDto, registerDto } = require('../dtos/users.dto');
+const router = express.Router();
+
+
+router.post(
+  '/register',
+  validatorHandler(registerDto, 'body'),
+  async (req, res, next) => {
+    try {
+      const { password } = req.body;
+      const passwordEncrypt = await encrypt(password);
+      const body = { ...req.body, passwordEncrypt };
+      const dataUser = await service.createDB(body);
+      res.json({
+        success: true,
+        token: await signToken(dataUser),
+        message: 'Se ha registrado correctamente',
+        data: dataUser,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  '/login',
+  validatorHandler(loginDto, 'body'),
+  async (req, res, next) => {
+    try {
+      const { email, password } = req.params;
+      const user = await service.findOneDB({ email: email }).select('password name role email'); //FILTRO SELECT DEL PASSWORD
+      if (!user) {
+        throw boom.notFound('No se encontro usuario');
+      }
+      const hashPassword = user.get('password'); //NO SE PUEDE ACCEDER DIRECTAMENTE A LA PROPIEDAD
+      const check = await compare(password, hashPassword);
+      if (!check) {
+        throw boom.unauthorized('No se encontro usuario');
+      }
+      user.set('password', undefined, {strict: false});
+      res.json({
+        success: true,
+        token: await signToken(user),
+        data: user,
+        message: 'Usuario logeado',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/* 
 const {
   createUsersDto,
   updateUsersDto,
@@ -137,6 +193,6 @@ router.delete(
 
 
 });
-
+*/
 
 module.exports = router;

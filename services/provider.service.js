@@ -1,12 +1,69 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
+const Model = require('../models/provider.model');
 const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class ProviderService {
-    constructor(){
-        this.pro = [];
-        this.generate();
-    }
+    constructor(){}
+    async createDB(data) {
+        const model = new Model(data);
+        model.save();
+        return data;
+      }
+    
+      async findDB(limit, filter) {
+        let providerDB = await Model.find(filter);
+        providerDB = limit
+          ? providerDB.filter((item, index) => item && index < limit)
+          : providerDB;
+        if (providerDB == undefined || providerDB == null)
+          throw boom.notFound('No se encontro catalogo');
+        else if (providerDB.length <= 0)
+          throw boom.notFound('No se encontro proveedor');
+        return providerDB;
+      }
+    
+      async findOneDB(id) {
+        const provider = await Model.findOne({
+          _id: id,
+        });
+        if (provider == undefined || provider == null)
+          throw boom.notFound('No se encontro catalogo');
+        else if (provider.length <= 0)
+          throw boom.notFound('No se encontro proveedor');
+        return provider;
+      }
+    
+      async updateDB(id, changes) {
+        let provider = await Model.findOne({
+          _id: id,
+        });
+        let providerOriginal = {
+          name: provider.name,
+          id: provider.id,
+        };
+        const { name } = changes;
+        provider.name = name;
+        provider.save();
+    
+        return {
+          original: providerOriginal,
+          actualizado: provider,
+        };
+      }
+    
+      async deleteDB(id) {
+        let provider = await Model.findOne({
+          _id: id,
+        });
+        const { deletedCount } = await Model.deleteOne({
+          _id: id,
+        });
+        if (deletedCount <= 0)
+          throw boom.notFound('El proveedor seleccionado no existe');
+        return provider;
+      }
+    /* 
     generate(){
         const limit = 10;
         for(let i = 0; i < limit; i++){
@@ -91,7 +148,7 @@ class ProviderService {
             message: 'Eliminado',
             id,
         };
-    }
+    }*/
 }
 
 module.exports = ProviderService;

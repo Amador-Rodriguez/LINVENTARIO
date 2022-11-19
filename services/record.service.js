@@ -1,12 +1,69 @@
-const faker = require('faker');
+//const faker = require('faker');
 const boom = require('@hapi/boom');
-const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
+const Model = require('../models/record.model');
+//const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class RecordService {
-  constructor() {
-    this.records = [];
-    this.generate();
+  constructor() {}
+  async createDB(data) {
+    const model = new Model(data);
+    model.save();
+    return data;
   }
+
+  async findDB(limit, filter) {
+    let recordDB = await Model.find(filter);
+    recordDB = limit
+      ? recordDB.filter((item, index) => item && index < limit)
+      : recordDB;
+    if (recordDB == undefined || recordDB == null)
+      throw boom.notFound('No se encontro registro');
+    else if (recordDB.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
+    return recordDB;
+  }
+
+  async findOneDB(id) {
+    const record = await Model.findOne({
+      _id: id,
+    });
+    if (record == undefined || record == null)
+      throw boom.notFound('No se encontro registro');
+    else if (record.length <= 0)
+      throw boom.notFound('No se encontro ningún registro');
+    return record;
+  }
+
+  async updateDB(id, changes) {
+    let record = await Model.findOne({
+      _id: id,
+    });
+    let recordOriginal = {
+      name: record.name,
+      id: record.id,
+    };
+    const { name } = changes;
+    record.name = name;
+    record.save();
+
+    return {
+      original: recordOriginal,
+      actualizado: record,
+    };
+  }
+
+  async deleteDB(id) {
+    let record = await Model.findOne({
+      _id: id,
+    });
+    const { deletedCount } = await Model.deleteOne({
+      _id: id,
+    });
+    if (deletedCount <= 0)
+      throw boom.notFound('El registro seleccionado no existe');
+    return record;
+  }
+  /* 
   generate() {
     const limit = 5;
     for (let i = 0; i < limit; i++) {
@@ -90,7 +147,7 @@ class RecordService {
       message: 'Eliminado',
       id,
     };
-  }
+  }*/
 }
 
 module.exports = RecordService;

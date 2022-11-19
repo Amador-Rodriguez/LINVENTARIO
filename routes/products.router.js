@@ -9,32 +9,86 @@ const {
   getProductId,
 } = require('../dtos/products.dto');
 
+router.get('/', async (req, res, next) => {
+  try {
+    const { limit } = req.query;
+    const filter = req.body;
+    const data = await service.findDB(limit, filter);
+    res.json({
+      success: true,
+      message: 'Listo',
+      data: data,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const data = await service.findOneDB(id);
+      res.json({
+        success: true,
+        message: 'Listo',
+        data: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  '/',
+  validatorHandler(createProductDto, 'body'),
+  async (req, res, next) => {
+    const body = req.body;
+    try {
+      const data = await service.createDB(body);
+      res.json({
+        success: true,
+        message: 'Listo',
+        data: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.patch(
+  '/:id',
+  validatorHandler(getProductId, 'params'),
+  validatorHandler(updateProductDto, 'body'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const data = await service.update(id, body);
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const resp = await service.delete(id);
+  res.json(resp);
+});
+/* 
 router.get('/', async(req, res) =>{
   const {size} = req.query;
   const limit = size || 20;
   const inv = await service.find(limit);
   res.json(inv);
 });
-/*
-router.get('/:id', async (req, res) => {
-    const {id} = req.params;
-    const product = await service.findOne(id);
-    let statusCode = '200';
-    let data = {
-      success: true,
-      message: 'Aqui esta',
-      data: product
-    };
-    if(product == null) {
-      statusCode = '400';
-      data = {
-        message: 'Error, no se encontro'
-      };
-    }
-    res.status(statusCode).json(data);
-});
 
- */
 router.get(
   '/:id',
   validatorHandler(getProductId, 'params'),
@@ -99,7 +153,7 @@ router.put('/:id', async (req, res, next) => {
     next(error);
   }
 });
-/* */
+
 router.patch(
   '/:id',
   validatorHandler(getProductId, 'params'),
@@ -161,6 +215,6 @@ router.delete(
     });
   }
 
-});
+});*/
 
 module.exports = router;

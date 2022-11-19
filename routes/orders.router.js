@@ -1,4 +1,5 @@
 const express = require('express');
+const boom = require('@hapi/boom');
 const router = express.Router();
 const OrderService = require('../services/orders.service');
 const validatorHandler = require('./../middlewares/validator.handler');
@@ -9,6 +10,79 @@ const {
   getOrdersId,
 } = require('../dtos/orders.dto');
 
+router.get('/', async (req, res, next) => {
+  try {
+    const { limit } = req.query;
+    const filter = req.body;
+    const data = await service.findDB(limit, filter);
+    res.json({
+      success: true,
+      message: 'Listo',
+      data: data,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get(
+  '/:id',
+  validatorHandler(getOrdersId, 'params'), //createOrdersDto
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const data = await service.findOneDB(id);
+      res.json({
+        success: true,
+        message: 'Listo',
+        data: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  '/',
+  validatorHandler(createOrdersDto, 'body'),
+  async (req, res, next) => {
+    const body = req.body;
+    try {
+      const data = await service.createDB(body);
+      res.json({
+        success: true,
+        message: 'Listo',
+        data: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.patch(
+  '/:id',
+  validatorHandler(getOrdersId, 'params'),
+  validatorHandler(updateOrdersDto, 'body'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const data = await service.update(id, body);
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const resp = await service.delete(id);
+  res.json(resp);
+});
+/* 
 router.get('/', async(req, res) =>{
   const {size} = req.query;
   const limit = size || 20;
@@ -80,7 +154,7 @@ router.put('/:id', async (req, res, next) => {
     next(error);
   }
 });
-/* */
+
 router.patch(
   '/:id',
   validatorHandler(getOrdersId, 'params'),
@@ -144,5 +218,5 @@ router.delete(
   }
 
 });
-
+*/
 module.exports = router;
