@@ -14,7 +14,7 @@ const { DBURL } = require('./const.json');
 db(DBURL);
 
 const app = express();
-const port = 3000;
+const port = 3090;
 //app.use(express.json());
 app.use(cors());
 app.use(
