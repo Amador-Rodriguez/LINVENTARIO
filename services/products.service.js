@@ -1,7 +1,6 @@
 //const faker = require('faker');
 const boom = require('@hapi/boom');
 const Model = require('../models/products.model');
-const { validateData, NOTFOUND, CONFLICT } = require('./../utils');
 
 class ProductService {
   constructor() {}
