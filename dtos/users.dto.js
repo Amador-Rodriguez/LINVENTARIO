@@ -1,17 +1,13 @@
 const Joi = require('joi');
 const { joiPasswordExtendCore } = require('joi-password');
-const joiPassword = Joi.extend(joiPasswordExtendCore);
+//const joiPassword = Joi.extend(joiPasswordExtendCore);
 
 //SCHEMA PARA DATOS REQUERIDOS Y LOGICA DE NEGOCIO
 const name = Joi.string();
 const email = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } });
-const password = joiPassword
-  .string()
-  .minOfSpecialCharacters(2)
-  .minOfLowercase(2)
-  .minOfUppercase(2)
-  .minOfNumeric(2)
-  .noWhiteSpaces();
+const password = Joi.string();
+
+  const type = Joi.string();
 
 const loginDto = Joi.object({
   email: email.required(),
@@ -21,6 +17,7 @@ const registerDto = Joi.object({
   name: name.required(),
   email: email.required(),
   password: password.required(),
+  type: type.required()
 });
 
 module.exports = { loginDto, registerDto};

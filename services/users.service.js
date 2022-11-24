@@ -15,9 +15,9 @@ class UserService {
 
   async createDB(data){
     const model = new Model(data);
-    model.set("password", undefined, {strict: false});
-    await model.save();
-    return model;
+    //model.set("password", undefined, {strict: false});
+    model.save();
+    return data;
   }
 
   async findDB(data){

@@ -18,23 +18,52 @@ import { View } from './../components/page/view/view';
 import { MAIN_PAGE } from './../utils/colors';
 
 export const Products = () => {
+  //enseñar todos los productos ///////////////////////////////////
   const [data, setProducts] = useState([]);
 
     const url = Global.url;
-
+/* 
     useEffect(() => {
         getProducts();
         console.log(data);
 
-    }, [data.length]);
+    }, [data.length]);*/
 
     //obtenemos todos los productos
-    const getProducts = () =>{
-        axios.get(url + '/products').then(res =>{
+    const getProducts = async() =>{
+      await axios.get(url + '/products').then(res =>{
             setProducts(res.data.data);
+            setCardProducts(res.data.data);
+        }).catch(error=>{
+          console.log(error);
         })
 
     }
+/////////////////////////////////////////////////////////////////////
+    //busqueda de prods
+    const [busqueda, setBusqueda]= useState("");
+    const [cardProducts, setCardProducts]= useState([]);
+
+    const handleChange=e=>{
+      setBusqueda(e.target.value);
+      filtrar(e.target.value);
+    }
+
+    const filtrar=(terminoBusqueda)=>{
+      var resultadosBusqueda=cardProducts.filter((elemento)=>{
+        if(elemento.nombre.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+        || elemento.marca.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+        ){
+          return elemento;
+        }
+      });
+      setProducts(resultadosBusqueda);
+    }
+
+    useEffect(()=>{
+      getProducts();
+      },[])
+  
 
   return (
     <div  >
@@ -57,11 +86,7 @@ export const Products = () => {
       <div class="d-flex bd-highlight">
 
       <div class="p-2 w-100 bd-highlight">
-        <Input type="text" name="productName" id="productName" placeholder="Nombre del producto"/>
-            </div>
-
-            <div class="p-2 w-100 bd-highlight">
-        <Input type="date" name="prodDate" id="prodDate" />
+        <Input type="text" name="productName" id="productName" placeholder="Nombre o marca del producto" value={busqueda} onChange={handleChange}/>
             </div>
 
       <div class="p-2 flex-shrink-1 bd-highlight">
@@ -90,24 +115,21 @@ export const Products = () => {
 
             <div style={{paddingLeft: '5px', alignItems:'left'}}>
   
-{
-                        data.length > 0 ?(
 
-                            data.map((product,i)=> {
-                                return(
+                        
+
+            {data && 
+           data.map((product,i)=>(
                                     <Product 
                                     key={i}
                                     id={i}
                                     productData={product}
                                     />
 
-                                );
-                            })
+                                    ))}
 
-                        ):(
-                            <h3 className="mx-auto">No hay productos</h3>
-                        )
-                    }
+                        
+                    
 
   
   
