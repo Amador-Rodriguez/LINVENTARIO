@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Navigate  } from "react-router-dom";
+import { useNavigate  } from "react-router-dom";
 import axios from 'axios';
 import Global from './../../Global';
 
@@ -14,7 +14,9 @@ import {
 
 import { 
   FormGroup,
-  Label } from 'reactstrap';
+  Form,
+  Label,
+  Input } from 'reactstrap';
 
 import { View } from '../components/page/view/view';
 import { LOGIN_PAGE } from '../utils/colors';
@@ -22,52 +24,57 @@ import Linlogo from './../res/Linventario_icon.png';
 import LinlogoS from './../res/Linventario_iconMin.png';
 
 export const Register = () => {
+
+  const [inputs, setInputs] = useState({
+    email: "",
+    name: "",
+    password: "",
+    type: "Colaborador",
+  });
   
+  const [mensaje, setMensaje] = useState();
+
+  const navigate = useNavigate();
+
+  const { name, password, email, type } = inputs;
+
+  const HandleChange = (e) => {
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
+  };
+
   const url=Global.url;
 
-  //hook
-  const [user, setUser] = useState ({
-      name: null,
-      email: null,
-      password: null,
-      type: null
-      });
-
-      const [redirect, setRedirect] = useState(false);
-
-      let nameRef = React.createRef();
-      let emailRef = React.createRef();
-      let passwordRef = React.createRef();
-      let typeRef = React.createRef();
-
-      const changeState = () =>{
-        setUser({
-            name: nameRef.current.value,
-            email: emailRef.current.value,
-            password: passwordRef.current.value,
-            type: typeRef.current.value
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (name !== "" && password !== "" && email !== "") {
+      const Usuario = {
+        name,
+        email,
+        password,
+        type,
+      };
+      
+      await axios
+        .post(url + '/users/register', Usuario)
+        .then((res) => {
+          const { data } = res;
+          setMensaje(data.mensaje);
+          setInputs({ name: "", password: "", email: "", type: "Colaborador" });
+          setTimeout(() => {
+            setMensaje("");
+            navigate("/login");
+          }, 1500);
+        })
+        .catch((error) => {
+          console.error(error);
+          setMensaje("Hubo un error");
+          setTimeout(() => {
+            setMensaje("");
+          }, 1500);
         });
 
-        console.log(user);
-
     }
-
-    const sendData = (e) =>{
-
-      e.preventDefault();
-      changeState();
-      //peticion http post
-      axios.post(url + '/users', user).then(res=> {
-          setRedirect(true);
-          console.log(res.data);
-      },);
-
-  }
-
-
-  if(redirect){
-      return <Navigate to="/" />;
-  }
+  };
 
   return (
 
@@ -110,37 +117,37 @@ export const Register = () => {
                     </div>
 
                     <Col md="12">
-                    <form className="m-auto align-self-center" onSubmit={sendData}> 
+                    <Form className="m-auto align-self-center" onSubmit={(e) => onSubmit(e)}> 
 
                     <FormGroup row className="text-center">
-                      <Label for="name" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Nombre </Label>
-                      <Col sm={10} style={{padding:'5px' }}>
-                      <input type="text" name="name" id="name" placeholder="Nombre" className="w-80" style={{
+                      <Label for="name" sm={2} style={{padding:'1px', fontFamily:'Cochin' }}>Nombre</Label>
+                      <Col sm={10} style={{padding:'10px' }}>
+                      <Input type="text" name="name" id="name" placeholder="Nombre" className="w-80" style={{
                       boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)' }}
-                      ref={nameRef} onChange={changeState} />
+                      onChange={(e) => HandleChange(e)} value={name}/>
                       </Col>
                       </FormGroup>
 
                       <FormGroup row className="text-center">
                       <Label for="email" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Email </Label>
                       <Col sm={10} style={{padding:'5px' }}>
-                      <input type="text" name="email" id="email" placeholder="Email" className="w-80" style={{
+                      <Input type="text" name="email" id="email" placeholder="Email" className="w-80" style={{
                       boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)' }}
-                      ref={emailRef} onChange={changeState} />
+                      onChange={(e) => HandleChange(e)} value={email}/>
                       </Col>
                       </FormGroup>
 
                       <FormGroup row className="text-center">
                       <Label for="password" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Contraseña </Label>
                       <Col sm={10} style={{padding:'5px' }}>
-                      <input type="text" name="password" id="password" placeholder="password" className="w-80" style={{
+                      <Input type="text" name="password" id="password" placeholder="password" className="w-80" style={{
                       boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)' }}
-                      ref={passwordRef} onChange={changeState} />
+                      onChange={(e) => HandleChange(e)} value={password} />
                       </Col>
                       </FormGroup>
 
-                      <input type="hidden" name="password" id="password" value="Colaborador"
-                      ref={typeRef} onChange={changeState} />
+                      <Input type="hidden" name="password" id="password" value="Colaborador"
+                      onChange={(e) => HandleChange(e)}/> 
 
                       <FormGroup check row className="text-center">
                         <Col style={{padding:'5px' }}>
@@ -157,7 +164,7 @@ export const Register = () => {
                       </FormGroup>
                     
                     
-                    </form>
+                    </Form>
                     </Col>
 
                     <Container padding= "100px">
@@ -175,3 +182,4 @@ export const Register = () => {
     </View>
   );
 };
+export default Register;

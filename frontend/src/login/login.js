@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Navigate  } from "react-router-dom";
+import { useNavigate  } from "react-router-dom";
 import axios from 'axios';
 import Global from './../../Global';
 
@@ -15,6 +15,7 @@ import {
 
 import { 
   FormGroup,
+  Input,
   Label } from 'reactstrap';
 
 import { View } from './../components/page/view/view';
@@ -23,47 +24,54 @@ import { LOGIN_PAGE } from './../utils/colors';
 import Linlogo from './../res/Linventario_icon.png';
 import LinlogoS from './../res/Linventario_iconMin.png';
 
-export const Login = () => {
 
+
+export const Login = () => {
+  const navigate = useNavigate();
+
+  const [inputs, setInputs] = useState({ email: "", password: "" });
+  const [mensaje, setMensaje] = useState();
+
+  const { email, password } = inputs;
+
+  const HandleChange = (e) => {
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
+  };
+  
   const url=Global.url;
 
-  //hook
-  const [user, logUser] = useState ({
-    email: null,
-    password: null
-    });
-
-    const [redirect, setRedirect] = useState(false);
-
-    let emailRef = React.createRef();
-    let passwordRef = React.createRef();
-
-    const changeState = () =>{
-      logUser({
-          email: emailRef.current.value,
-          password: passwordRef.current.value
-      });
-
-      console.log(user);
-
-  }
-
-  const sendData = (e) =>{
-
+  const onSubmit = async (e) => {
     e.preventDefault();
-    changeState();
-    //peticion http post
-    axios.post(url + '/login', user).then(res=> {
-        setRedirect(true);
-        console.log(res.user);
-    },);
-
-}
-
-
-if(redirect){
-    return <Navigate to="/" />;
-}
+    if (email !== "" && password !== "") {
+      const Usuario = {
+        email,
+        password,
+      };
+      await axios
+        .post(url + '/users/login', Usuario)
+        .then((res) => {
+          const { data } = res;
+          setMensaje(data.mensaje);
+          setTimeout(() => {
+            setMensaje("");
+            localStorage.setItem("inputs", JSON.stringify(data.users));
+            localStorage.setItem("pass", JSON.stringify(inputs.password));
+            if(data.users != null){
+            navigate("/profile");
+            }
+          }, 1500, [data.users], [inputs.password]);
+        })
+        .catch((error) => {
+          console.error(error);
+          setMensaje("Correo u contraseña incorrecta");
+          setTimeout(() => {
+            setMensaje("");
+          }, 1500);
+        });
+      setInputs({ email: "", password: "" });
+      
+    }
+  };
 
   return (
 
@@ -106,23 +114,23 @@ if(redirect){
                     </div>
                     <Col md="12">
 
-                    <form className="m-auto align-self-center" onSubmit={sendData}> 
+                    <form className="m-auto align-self-center" onSubmit={(e) => onSubmit(e)}> 
 
                     <FormGroup row className="text-center">
                       <Label for="email" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Email </Label>
                       <Col sm={10} style={{padding:'5px' }}>
-                      <input type="text" name="email" id="email" placeholder="Email" className="w-80" style={{
+                      <Input type="text" name="email" id="email" placeholder="Email" className="w-80" style={{
                       boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)' }}
-                      ref={emailRef} onChange={changeState} />
+                      value={email} onChange={(e) => HandleChange(e)} />
                       </Col>
                       </FormGroup>
 
                       <FormGroup row className="text-center">
                       <Label for="password" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Contraseña </Label>
                       <Col sm={10} style={{padding:'5px' }}>
-                      <input type="text" name="password" id="password" placeholder="password" className="w-80" style={{
+                      <Input type="text" name="password" id="password" placeholder="password" className="w-80" style={{
                       boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)' }}
-                      ref={passwordRef} onChange={changeState} />
+                      value={password} onChange={(e) => HandleChange(e)} />
                       </Col>
                       </FormGroup>
 
@@ -142,11 +150,13 @@ if(redirect){
 
                     </form>
 
+                    {mensaje && <div>{mensaje}</div>}
+
                     </Col>
 
                     <Container>
                     <h6 className="text-center" style={{padding: '10px',fontFamily: 'Cambria, Cochin, Georgia, Times, Times New Roman, serif'}}>¿No tienes cuenta?  <a href="register"
-                    onRegister={(email, password) => {navigateR("/register");}}>Regístrate</a></h6>
+                    onClick={() => {navigate("/register");}}>Regístrate</a></h6>
                     </Container>
 
                   </Row>
@@ -160,3 +170,4 @@ if(redirect){
     </View>
   );
 };
+export default Login;

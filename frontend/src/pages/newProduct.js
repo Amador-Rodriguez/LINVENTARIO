@@ -119,13 +119,13 @@ export const Product = () => {
 
     <CardBody className="align-items-center">
       <CardText tag="h5" className="m-auto align-self-center">
-      <form className="m-auto align-self-center" onSubmit={sendData}>
+      <Form className="m-auto align-self-center" onSubmit={sendData}>
 
 
         <FormGroup row className="text-center">
-          <Label for="productName" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Nombre del producto</Label>
+          <Label for="productName" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Nombre</Label>
           <Col sm={10} style={{padding:'5px' }}>
-          <input type="text" name="productName" id="productName" placeholder="Nombre del producto" className="w-80" style={{
+          <Input type="text" name="productName" id="productName" placeholder="Nombre del producto" className="w-80" style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)' }}
               ref={nombreRef} onChange={changeState} />
           </Col>
@@ -133,18 +133,18 @@ export const Product = () => {
         <FormGroup row className="text-center">
           <Label for="productCode" sm={2} style={{padding:'5px',fontFamily:'Cochin' }}>Código del producto</Label>
           <Col sm={10} style={{padding:'5px' }}>
-            <input type="text" name="productCode" id="productCode" placeholder="Código del producto" className="w-80" ref={codigoRef} onChange={changeState}
+            <Input type="text" name="productCode" id="productCode" placeholder="Código del producto" className="w-80" ref={codigoRef} onChange={changeState}
             style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'
             }}> 
-              </input>
+              </Input>
           </Col>
         </FormGroup>
 
         <FormGroup row className="text-center">
-          <Label for="productDesc" sm={2} style={{fontFamily:'Cochin'}}>Descripcion del producto</Label>
+          <Label for="productDesc" sm={2} style={{fontFamily:'Cochin'}}>Descripcion </Label>
           <Col sm={10} style={{padding:'5px' }}>
-            <input type="textarea" name="productDesc" id="productDesc" rows="4" className="w-80"
+            <Input type="textarea" name="productDesc" id="productDesc" rows="4" className="w-80"
             style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
             ref={descripcionRef} onChange={changeState}/>
@@ -154,7 +154,7 @@ export const Product = () => {
         <FormGroup row className="text-center">
           <Label for="brand" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Marca</Label>
         <Col sm={10} style={{padding:'5px' }}>
-            <input type="text" name="brand" id="brand" placeholder="Marca" className="w-80"
+            <Input type="text" name="brand" id="brand" placeholder="Marca" className="w-80"
             style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'
             }}
@@ -165,7 +165,7 @@ export const Product = () => {
         <FormGroup row className="text-center">
           <Label for="category" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Categoria</Label>
         <Col sm={10} style={{padding:'5px' }}>
-            <input type="text" name="category" id="category" placeholder="Categoria" className="w-80"
+            <Input type="text" name="category" id="category" placeholder="Categoria" className="w-80"
             style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'
             }}
@@ -174,20 +174,9 @@ export const Product = () => {
         </FormGroup>
 
         <FormGroup row className="text-center">
-          <Label for="subcategory" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Subcategoria</Label>
-        <Col sm={10} style={{padding:'5px' }}>
-            <input type="text" name="subcategory" id="subcategory" placeholder="Subategoria" className="w-80"
-            style={{
-              boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'
-            }}
-            ref={subcategoriaRef} onChange={changeState}/>
-          </Col>
-        </FormGroup>
-
-        <FormGroup row className="text-center">
           <Label for="purchasePrice"sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Precio de compra</Label>
         <Col sm={10} style={{padding:'5px' }}>
-            <input type="text" name="purchasePrice" id="purchasePrice" placeholder="Precio de compra" className="w-80"
+            <Input type="text" name="purchasePrice" id="purchasePrice" placeholder="Precio de compra" className="w-80"
             style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)' }}
               ref={precioRef} onChange={changeState}/>
@@ -197,7 +186,7 @@ export const Product = () => {
         <FormGroup row className="text-center">
         <Label for="amount" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Stock</Label>
           <Col sm={10} style={{padding:'5px' }}>
-            <input type="text" name="amount" id="amount" placeholder="Stock" className="w-80"
+            <Input type="text" name="amount" id="amount" placeholder="Stock" className="w-80"
             style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
               ref={stockRef} onChange={changeState}/>
@@ -207,7 +196,7 @@ export const Product = () => {
         <FormGroup row className="text-center">
         <Label for="amount" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Stock minimo</Label>
           <Col sm={10} style={{padding:'5px' }}>
-            <input type="text" name="amountmin" id="amountmin" placeholder="Stock minimo" className="w-80"
+            <Input type="text" name="amountmin" id="amountmin" placeholder="Stock minimo" className="w-80"
             style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
               ref={min_stockRef} onChange={changeState}/>
@@ -217,7 +206,7 @@ export const Product = () => {
         <FormGroup row className="text-center">
           <Label for="productExpire" sm={2} style={{fontFamily:'Cochin'}}>Fecha de expiración</Label>
           <Col sm={10} style={{padding:'5px' }}>
-          <input type="date" name="productExpire" id="productExpire" placeholder="date placeholder" className="w-80" style={{
+          <Input type="date" name="productExpire" id="productExpire" placeholder="date placeholder" className="w-80" style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
               ref={entryRef} onChange={changeState}/>
           </Col>
@@ -226,7 +215,7 @@ export const Product = () => {
         <FormGroup row className="text-center">
         <Label for="provider" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Proveedor</Label>
           <Col sm={10} style={{padding:'5px' }}>
-            <input type="text" name="provider" id="provider" placeholder="Proveedor" className="w-80"
+            <Input type="text" name="provider" id="provider" placeholder="Proveedor" className="w-80"
             style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
               ref={proveedorRef} onChange={changeState}/>
@@ -248,7 +237,7 @@ export const Product = () => {
             type="submit" id="submit" placeholder="Guardar" />
           </Col>
         </FormGroup>
-      </form>
+      </Form>
 
       </CardText>
     </CardBody>

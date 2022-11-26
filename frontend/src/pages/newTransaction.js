@@ -91,24 +91,15 @@ export const NewTransaction = () => {
         </FormGroup>
 
         <FormGroup row className="text-center">
-          <Label for="entrada"sm={2} style={{padding:'10px', fontFamily:'Cochin' }}>Entrada</Label>
+          <Label for="entrada"sm={2} style={{padding:'10px', fontFamily:'Cochin' }}>Tipo</Label>
         <Col sm={10} style={{padding:'10px' }}>
-            <Input type="text" name="entrada" id="entrada" placeholder="Entrada" className="w-80"
+        <Input type="select" name="productName" id="productName" placeholder="Tipo" className="w-80"
             style={{
-              boxShadow:'0px 10px 21px rgba(0, 0, 0, 0.50)',
-              borderColor:'green'
-            }}/>
-          </Col>
-        </FormGroup>
-
-        <FormGroup row className="text-center">
-          <Label for="salida" sm={2} style={{padding:'10px', fontFamily:'Cochin' }}>Salida</Label>
-        <Col sm={10} style={{padding:'10px' }}>
-            <Input type="text" name="salida" id="salida" placeholder="Salida" className="w-80"
-            style={{
-              boxShadow:'0px 10px 21px rgba(0, 0, 0, 0.50)',
-              borderColor:'red'
-            }}/>
+              boxShadow:'0px 10px 21px rgba(0, 0, 0, 0.50)'
+            }}>
+            <option>Entrada</option>
+            <option>Salida</option>
+              </Input>
           </Col>
         </FormGroup>
 

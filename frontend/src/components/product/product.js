@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import { useNavigate  } from "react-router-dom";
+
 import { Container, 
   CardText, 
   Button, 
@@ -12,8 +14,18 @@ import { Container,
 
 const Product = ({productData}) => {
 
-  const {nombre, descripcion, precio, 
+  const navigate = useNavigate();
+
+  const {_id, nombre, descripcion, precio, 
       } = productData
+
+      //redirect
+      const [inputs, setInputs] = useState({ _id, nombre });
+
+const redirect = () => {
+  localStorage.setItem("item", JSON.stringify(inputs));
+  navigate("/newTransaction");
+};
 
   return(
     <Card border="dark" className="align-items-center"
@@ -54,8 +66,8 @@ const Product = ({productData}) => {
     <Button style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)',
               backgroundColor: '#6375b8',
-              borderColor:'#6375b8'
-            }}>Comprar</Button>
+              borderColor:'#6375b8'}}
+              onClickCapture={redirect} >Transacción</Button>
     </CardBody>
   </Card>
       
