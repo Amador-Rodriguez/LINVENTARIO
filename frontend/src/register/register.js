@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useNavigate  } from "react-router-dom";
 import axios from 'axios';
 import Global from './../../Global';
+import Background from './../res/portada5.jpg';
 
 import {
   Container,
@@ -12,7 +13,7 @@ import {
   CardBody
 } from 'reactstrap';
 
-import { 
+import {
   FormGroup,
   Form,
   Label,
@@ -31,7 +32,7 @@ export const Register = () => {
     password: "",
     type: "Colaborador",
   });
-  
+
   const [mensaje, setMensaje] = useState();
 
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ export const Register = () => {
         password,
         type,
       };
-      
+
       await axios
         .post(url + '/users/register', Usuario)
         .then((res) => {
@@ -77,6 +78,8 @@ export const Register = () => {
   };
 
   return (
+    <div style={{ backgroundImage: `url(${Background}) `, backgroundRepeat: 'no-repeat', backgroundSize:'cover' }} >
+
 
     <View theme={LOGIN_PAGE} banner={''} className="text-center">
 
@@ -117,7 +120,7 @@ export const Register = () => {
                     </div>
 
                     <Col md="12">
-                    <Form className="m-auto align-self-center" onSubmit={(e) => onSubmit(e)}> 
+                    <Form className="m-auto align-self-center" onSubmit={(e) => onSubmit(e)}>
 
                     <FormGroup row className="text-center">
                       <Label for="name" sm={2} style={{padding:'1px', fontFamily:'Cochin' }}>Nombre</Label>
@@ -147,12 +150,12 @@ export const Register = () => {
                       </FormGroup>
 
                       <Input type="hidden" name="password" id="password" value="Colaborador"
-                      onChange={(e) => HandleChange(e)}/> 
+                      onChange={(e) => HandleChange(e)}/>
 
                       <FormGroup check row className="text-center">
                         <Col style={{padding:'5px' }}>
 
-            
+
 
                           <input className="w-50" style={{
                             boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)',
@@ -162,8 +165,8 @@ export const Register = () => {
                           type="submit" id="submit" placeholder="Guardar" />
                         </Col>
                       </FormGroup>
-                    
-                    
+
+
                     </Form>
                     </Col>
 
@@ -180,6 +183,8 @@ export const Register = () => {
       </Container>
 
     </View>
+    </div>
+
   );
 };
 export default Register;

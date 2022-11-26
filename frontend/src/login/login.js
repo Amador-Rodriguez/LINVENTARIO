@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useNavigate  } from "react-router-dom";
 import axios from 'axios';
 import Global from './../../Global';
+import Background from './../res/portada5.jpg';
 
 import {
   Container,
@@ -13,7 +14,7 @@ import {
   CardBody
 } from 'reactstrap';
 
-import { 
+import {
   FormGroup,
   Input,
   Label } from 'reactstrap';
@@ -37,7 +38,7 @@ export const Login = () => {
   const HandleChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
-  
+
   const url=Global.url;
 
   const onSubmit = async (e) => {
@@ -69,11 +70,13 @@ export const Login = () => {
           }, 1500);
         });
       setInputs({ email: "", password: "" });
-      
+
     }
   };
 
   return (
+    <div style={{ backgroundImage: `url(${Background}) `, backgroundRepeat: 'no-repeat', backgroundSize:'cover' }} >
+
 
     <View theme={LOGIN_PAGE} banner={''} className="" >
 
@@ -114,7 +117,7 @@ export const Login = () => {
                     </div>
                     <Col md="12">
 
-                    <form className="m-auto align-self-center" onSubmit={(e) => onSubmit(e)}> 
+                    <form className="m-auto align-self-center" onSubmit={(e) => onSubmit(e)}>
 
                     <FormGroup row className="text-center">
                       <Label for="email" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Email </Label>
@@ -137,7 +140,7 @@ export const Login = () => {
                       <FormGroup check row className="text-center">
                         <Col style={{padding:'5px' }}>
 
-            
+
 
                           <input className="w-50" style={{
                             boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)',
@@ -168,6 +171,8 @@ export const Login = () => {
       </Container>
 
     </View>
+    </div>
+
   );
 };
 export default Login;
