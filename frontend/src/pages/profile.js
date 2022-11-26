@@ -76,15 +76,24 @@ const { name, password, email } = inputs;
 
 const onSubmit = async (e) => {
   e.preventDefault();
+  if(name == ""){
+    name = items.name;
+  }
+  if(password == ""){
+    password = pwd;
+  }
+  if(email == ""){
+    email = items.email;
+  }
   if (name !== "" && password !== "" && email !== "") {
     const Usuario = {
       name,
-      email,
       password,
+      email,
     };
     
     await axios
-      .patch(url + '/profile', Usuario)
+      .put(url + '/profile', Usuario)
       .then((res) => {
         const { data } = res;
         setMensaje(data.mensaje);
@@ -187,29 +196,29 @@ const onSubmit = async (e) => {
 </Row>
 <form onSubmit={(e) => onSubmit(e)}>
 <FormGroup row className="text-center">
-          <Label for="name" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Nombre </Label>
+          <Label for="name" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Nombre {items.name}</Label>
           <Col sm={10} style={{padding:'5px' }}>
           <Input type="text" name="name" id="name" placeholder="Nombre" className="w-80" style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
-              value={items.name} onChange={(e) => HandleChange(e)}/>
+              value={name} onChange={(e) => HandleChange(e)}/>
           </Col>
         </FormGroup>
 
         <FormGroup row className="text-center">
-          <Label for="email" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Email </Label>
+          <Label for="email" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Email {items.email}</Label>
           <Col sm={10} style={{padding:'5px' }}>
           <Input type="text" name="email" id="email" placeholder="Email" className="w-80" style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
-              value={items.email} onChange={(e) => HandleChange(e)}/>
+              value={email} onChange={(e) => HandleChange(e)}/>
           </Col>
         </FormGroup>
 
         <FormGroup row className="text-center">
-          <Label for="storeName" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Contraseña</Label>
+          <Label for="password" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Contraseña {pwd}</Label>
           <Col sm={10} style={{padding:'5px' }}>
-          <Input type="text" name="storeName" id="storeName" placeholder="Contraseña" className="w-80" style={{
+          <Input type="text" name="password" id="password" placeholder="Contraseña" className="w-80" style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
-              value={pwd} onChange={(e) => HandleChange(e)}/>
+              value={password} onChange={(e) => HandleChange(e)}/>
           </Col>
         </FormGroup>
 

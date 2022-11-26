@@ -6,8 +6,7 @@ const { joiPasswordExtendCore } = require('joi-password');
 const name = Joi.string();
 const email = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } });
 const password = Joi.string();
-
-  const type = Joi.string();
+const type = Joi.string();
 
 const loginDto = Joi.object({
   email: email.required(),
@@ -19,8 +18,13 @@ const registerDto = Joi.object({
   password: password.required(),
   type: type.required()
 });
+const updateUsersDto = Joi.object({
+  name: name,
+  email: email,
+  type: type,
+});
 
-module.exports = { loginDto, registerDto};
+module.exports = { loginDto, registerDto, updateUsersDto};
 
 /* 
 const Joi = require('joi');
