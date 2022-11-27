@@ -3,9 +3,9 @@ import {Table, TableBody,TableCell, TableContainer,TableHead, TableRow} from '@m
 import { withStyles } from "@material-ui/core/styles";
 import { textAlign } from '@mui/system';
 
-const StyledTable = withStyles(()=>({
+const StyledTableCell = withStyles(()=>({
     head:{
-        color :  props.font,
+        color: 'white',
         background:"black",
         textAlign: 'center'
     },
@@ -18,22 +18,24 @@ const StyledTable = withStyles(()=>({
 function TableMaterial(props) {
     return (
         <TableContainer>
+        <Table>
             <TableHead>
                 <TableRow>
-                    <Styledcel>Producto</Styledcel>
-                    <Styledcel>Tipo de transacción</Styledcel>
-                    <Styledcel>Cantidad</Styledcel>
+                    <StyledTableCell>Producto</StyledTableCell>
+                    <StyledTableCell>Tipo de transacción</StyledTableCell>
+                    <StyledTableCell>Cantidad</StyledTableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
-                {props.data.map(elemento=>{
-                    <TableRow key={elemento.id}>
-                        <TableCell><img src={elemento.imagen} width="35px" height = "25px"/>{"  "}{elemento.video}</TableCell>
-                        <TableCell>{elemento.tip}</TableCell>
+                {props.data.map((elemento, i)=>
+                    <TableRow key={i}>
+                        <TableCell>{elemento.producto}</TableCell>
+                        <TableCell>{elemento.tipo}</TableCell>
                         <TableCell>{elemento.cantidad}</TableCell>
                     </TableRow>
-                })}
+                )}
             </TableBody>
+        </Table>
         </TableContainer>
     );
 }

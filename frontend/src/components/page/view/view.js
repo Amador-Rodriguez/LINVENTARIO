@@ -58,13 +58,20 @@ const footeritems = [
   }
 ];
 
+const loggedIn= ({handleEvent})=>{
+  return 
+};
+
 var logedIn = false;
 
 export const View = (props) => {
   return (
     <Container fluid>
       <Row >
-      <Navbar color="light" light expand="md">
+
+      {localStorage.getItem("inputs")==null ? (
+
+        <Navbar color="light" light expand="md">
         <Nav className="mr-auto" navbar>
         <NavbarBrand href="/"><CardImg
                         alt="Linv logo"
@@ -77,13 +84,36 @@ export const View = (props) => {
           <NavLink tag={RRNavLink} to="/">Inicio</NavLink>
           <NavLink tag={RRNavLink} to="/login">Iniciar sesión</NavLink>
           <NavLink tag={RRNavLink} to="/register">Registrarse</NavLink>
-          <NavLink tag={RRNavLink} to="/newProduct">Producto</NavLink>
-          <NavLink tag={RRNavLink} to="/newTransaction">Transaccion</NavLink>
-          <NavLink tag={RRNavLink} to="/dashboard">Menu</NavLink>
-          <NavLink tag={RRNavLink} to="/search">Buscar</NavLink>
-          <NavLink tag={RRNavLink} to="/profile">Perfil</NavLink>
+          
           </Nav>
         </Navbar>
+            
+      ):<Navbar color="light" light expand="md">
+        <Nav className="mr-auto" navbar>
+        <NavbarBrand href="/"><CardImg
+                        alt="Linv logo"
+                        src={Linlogo}
+                        style={{
+                          width: 200,
+                        }}
+                        width="100%"
+                      /></NavbarBrand>
+          <NavLink tag={RRNavLink} to="/">Inicio</NavLink>
+          
+          
+          <NavLink tag={RRNavLink} to="/dashboard">Dashboard</NavLink>
+          
+          <NavLink tag={RRNavLink} to="/newProduct">Producto</NavLink>
+          <NavLink tag={RRNavLink} to="/newTransaction">Transaccion</NavLink>
+          <NavLink tag={RRNavLink} to="/search">Buscar</NavLink>
+          <NavLink tag={RRNavLink} to="/profile">Perfil</NavLink>
+          
+          
+          </Nav>
+        </Navbar>}
+
+
+      
       </Row>
 
 

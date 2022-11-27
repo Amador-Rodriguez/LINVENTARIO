@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate  } from "react-router-dom";
 import {Grid} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,6 +13,10 @@ import CardsHeader  from "../components/dashboard/cardsHeader"
 import Cards  from "../components/dashboard/cards"
 import Graphics from "../components/dashboard/graphics"
 import TableMaterial from './TableMaterial';
+
+import axios from "axios";
+import Global from './../../Global';
+
 
 const useStyles = makeStyles(()=>({
   root:{
@@ -38,23 +42,52 @@ let numbers = [0.17, 19, 3, 357, 565, 1];
 export const Dashboard = () => {
   let navigate = useNavigate();
   const classes = useStyles();
+
+  const [sales, setSales] = useState([]);
+  const [stockGlobal, getStockGloblal] = useState([]);
+
+  
+
+  const url = Global.url;
+
+  const getSales= async() =>{
+    await axios.get(url + '/sales')
+    .then(response =>{
+      setSales(response.data.data);
+
+      console.log(response.data.data);
+    }).catch(error=>{
+      console.log(error);
+    });
+  }
+
+  useEffect(()=>{
+    getSales();
+  },[])
+
   return (
     <View theme={MAIN_PAGE}  className="text-center" >
 
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid item xs ={12} sm={4} md={4} lg={4} xl={4}>
-            <CardsHeader icono = {<ImportExportIcon className={classes.iconos} />} titulo ="Nueva transacción" texto="" color="rgba(43, 77, 219, 1)" font="white"/>
+            <a href="/newTransaction">
+              <CardsHeader icono = {<ImportExportIcon className={classes.iconos} />} titulo ="Nueva transacción" texto="" color="rgba(43, 77, 219, 1)" font="white"/>
+            </a>
           </Grid>
 
           <Grid item xs ={12} sm={4} md={4} lg={4} xl={4}>
+          <a href="/newProduct">
+
           <CardsHeader icono = {<AddBoxIcon className={classes.iconos} />} titulo ="Nuevo producto" texto="" color="rgba(43, 77, 219, 1)" font="white"/>
-
+          </a>
           </Grid>
 
           <Grid item xs ={12} sm={4} md={4} lg={4} xl={4}>
-          <CardsHeader icono = {<CategoryIcon className={classes.iconos} />} titulo ="Nueva categoria" texto="" color="rgba(43, 77, 219, 1)" font="white"/>
+          <a href="/newProduct">
 
+          <CardsHeader icono = {<CategoryIcon className={classes.iconos} />} titulo ="Nueva categoria" texto="" color="rgba(43, 77, 219, 1)" font="white"/>
+          </a>
           </Grid>
 
           <Grid container spacing={1} className={classes.container} xs={12} sm={12} md={6} lg={6} xl={6}>
@@ -83,6 +116,10 @@ export const Dashboard = () => {
 
           <Grid item xs={12} sm={12} md={5} lg={5} xl={5} className={classes.containerGrafica}>
             <Graphics values = {numbers}></Graphics>
+          </Grid>
+
+          <Grid item xs={12} className={classes.containerTabla}>
+            <TableMaterial data = {sales}></TableMaterial>
           </Grid>
 
         </Grid>
