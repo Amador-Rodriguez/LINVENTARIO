@@ -93,6 +93,7 @@ export const NewTransaction = () => {
     axios.post(url + '/sales', transaction).then(res=> {
         setRedirect(true);
         console.log(res.data);
+        localStorage.removeItem('item');
     },);
 
 }

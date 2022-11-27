@@ -24,7 +24,11 @@ const updateUsersDto = Joi.object({
   type: type,
 });
 
-module.exports = { loginDto, registerDto, updateUsersDto};
+const getUsersEmail = Joi.object({
+  email: email.required(),
+});
+
+module.exports = { loginDto, registerDto, updateUsersDto, getUsersEmail};
 
 /* 
 const Joi = require('joi');

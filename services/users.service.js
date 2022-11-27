@@ -40,9 +40,9 @@ class UserService {
 
   }
 
-  async updateDB(id, changes) {
+  async updateDB(email, changes) {
     let User = await Model.findOne({
-      _id: id,
+      email: email,
     });
     let UserOriginal = User;
     User = {

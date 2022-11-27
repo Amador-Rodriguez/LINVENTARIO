@@ -3,7 +3,7 @@ const boom = require('@hapi/boom');
 const UserService = require('../services/users.service');
 const service = new UserService();
 const validatorHandler = require('./../middlewares/validator.handler');
-const { loginDto, registerDto } = require('../dtos/users.dto');
+const { loginDto, registerDto, updateUsersDto, getUsersEmail } = require('../dtos/users.dto');
 const router = express.Router();
 
 router.post(
@@ -51,6 +51,30 @@ router.get(
     }
   }
 );
+
+router.put(
+  '/:email',
+  validatorHandler(getUsersEmail, 'params'),
+  validatorHandler(updateUsersDto, 'body'),
+  async (req, res) => {
+  try {
+    const {
+      email
+    } = req.params;
+    const body = req.body;
+    const result = await service.replace(email, body);
+    res.json({
+      message: 'actualizacion completa',
+      data: result,
+      email,
+
+    });
+  } catch (error) {
+    res.status(404).json({
+      message: error.message
+    });
+  }
+});
 
 module.exports = router;
 /* 

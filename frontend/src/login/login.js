@@ -131,7 +131,7 @@ export const Login = () => {
                       <FormGroup row className="text-center">
                       <Label for="password" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Contraseña </Label>
                       <Col sm={10} style={{padding:'5px' }}>
-                      <Input type="text" name="password" id="password" placeholder="password" className="w-80" style={{
+                      <Input type="password" name="password" id="password" placeholder="password" className="w-80" style={{
                       boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)' }}
                       value={password} onChange={(e) => HandleChange(e)} />
                       </Col>

@@ -39,7 +39,7 @@ const editUser = async(req, res) => {
           });
 
           updUser
-            .save()
+            .updateOne()
             .then((users) => {
               res.json({ mensaje: "Usuario editado", users });
             })

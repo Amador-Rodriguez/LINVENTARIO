@@ -56,63 +56,79 @@ export const Profile = () => {
 const logout = () => {
   localStorage.removeItem('inputs');
   localStorage.removeItem('pass');
+  localStorage.removeItem('item');
   navigate("/");
 };
 
-//editar datos
-const [inputs, setInputs] = useState({
-  email: "",
-  name: "",
-  password: "",
+//editar datos 
+//hook
+const [usuarioUpd, setUpdate] = useState ({
+  email: null,
+  name: null,
+  password: null
+  });
+
+  const [redirect, setRedirect] = useState(false);
+
+  let emailRef = React.createRef();
+  let nameRef = React.createRef();
+  let passwordRef = React.createRef();
+
+
+const changeState = () =>{
+  setUpdate({
+      email: emailRef.current.value,
+      name: nameRef.current.value,
+      password: passwordRef.current.value
+  });
+
+  console.log(usuarioUpd);
+
+}
+/* 
+const sendData = (e) =>{
+
+  e.preventDefault();
+  changeState();
+  axios.put(url + '/profile/:email', usuarioUpd).then(res=> {
+      console.log(res.data);
+  },);
+
+}*/
+
+const sendData = (e) =>{
+
+app.put(url + '/profile/:email', (req, res, next) => {
+  if(nameRef == ""){
+    nameRef = items.name;
+  }
+  if(passwordRef == ""){
+    passwordRef = pwd;
+  }
+  if(emailRef == ""){
+    emailRef = items.email;
+  }
+  const thing = new Model({
+    email: emailRef,
+    name: nameRef,
+    password: passwordRef
+  });
+  Model.updateOne({email: req.params.email}, thing).then(
+    () => {
+      res.status(201).json({
+        message: 'Thing updated successfully!'
+      });
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({
+        error: error
+      });
+    }
+  );
 });
 
-const [mensaje, setMensaje] = useState();
-
-const { name, password, email } = inputs;
-
-  const HandleChange = (e) => {
-    setInputs({ ...inputs, [e.target.name]: e.target.value });
-  };
-
-const onSubmit = async (e) => {
-  e.preventDefault();
-  if(name == ""){
-    name = items.name;
-  }
-  if(password == ""){
-    password = pwd;
-  }
-  if(email == ""){
-    email = items.email;
-  }
-  if (name !== "" && password !== "" && email !== "") {
-    const Usuario = {
-      name,
-      password,
-      email,
-    };
-    
-    await axios
-      .put(url + '/profile', Usuario)
-      .then((res) => {
-        const { data } = res;
-        setMensaje(data.mensaje);
-        setInputs({ name: "", password: "", email: ""});
-        setTimeout(() => {
-          setMensaje("");
-          navigate("/profile");
-        }, 1500);
-      })
-      .catch((error) => {
-        console.error(error);
-        setMensaje("Hubo un error");
-        setTimeout(() => {
-          setMensaje("");
-        }, 1500);
-      });
-
-  }
-};
+}
 
   return (
     <div  >
@@ -194,40 +210,40 @@ const onSubmit = async (e) => {
             </div>
 
 </Row>
-<form onSubmit={(e) => onSubmit(e)}>
+<form onSubmit={sendData}>
 <FormGroup row className="text-center">
           <Label for="name" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Nombre {items.name}</Label>
           <Col sm={10} style={{padding:'5px' }}>
-          <Input type="text" name="name" id="name" placeholder="Nombre" className="w-80" style={{
+          <input type="text" name="name" id="name" placeholder="Nombre" className="w-80" style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
-              value={name} onChange={(e) => HandleChange(e)}/>
+              ref={nameRef} onChange={changeState}/>
           </Col>
         </FormGroup>
 
         <FormGroup row className="text-center">
           <Label for="email" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Email {items.email}</Label>
           <Col sm={10} style={{padding:'5px' }}>
-          <Input type="text" name="email" id="email" placeholder="Email" className="w-80" style={{
+          <input type="text" name="email" id="email" placeholder="Email" className="w-80" style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
-              value={email} onChange={(e) => HandleChange(e)}/>
+              ref={emailRef} onChange={changeState}/>
           </Col>
         </FormGroup>
 
         <FormGroup row className="text-center">
           <Label for="password" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Contraseña {pwd}</Label>
           <Col sm={10} style={{padding:'5px' }}>
-          <Input type="text" name="password" id="password" placeholder="Contraseña" className="w-80" style={{
+          <input type="password" name="password" id="password" placeholder="Contraseña" className="w-80" style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
-              value={password} onChange={(e) => HandleChange(e)}/>
+              ref={passwordRef} onChange={changeState}/>
           </Col>
         </FormGroup>
 
         <FormGroup row className="text-center">
           <Label for="storeName" sm={2} style={{padding:'5px', fontFamily:'Cochin' }}>Tipo: </Label>
           <Col sm={10} style={{padding:'5px' }}>
-          <Input type="text" name="storeName" id="storeName" placeholder="Tipo" className="w-80" style={{
+          <input type="text" name="storeName" id="storeName" placeholder="Tipo" className="w-80" style={{
               boxShadow:'0px 7px 19px rgba(0, 0, 0, 0.40)'}}
-              value={items.type} readOnly/>
+              value={items.type}/>
           </Col>
         </FormGroup>
 
